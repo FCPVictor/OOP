@@ -18,7 +18,7 @@ public class LoginController implements Initializable {
     }
 
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        File loginFile = new File("images/loginLogo.png");
+        File loginFile = new File("images/login.png");
         Image loginImage = new Image(loginFile.toURI().toString());
         this.loginLogo_1.setImage(loginImage);
         this.loginLogo_2.setImage(loginImage);
