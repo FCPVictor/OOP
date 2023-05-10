@@ -61,10 +61,10 @@ public class Main {
                         }
                     }
                 } while (user == null);
-                //Prompt user to choose option (Eg. login or register)
 
 
-                // Connect to the database
+
+
 
 
             }

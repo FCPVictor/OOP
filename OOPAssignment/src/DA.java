@@ -6,6 +6,8 @@ public class DA {
     public DA() {
         getConnection();
     }
+
+    // Connect to the database
     public void getConnection() {
         try {
             Class.forName("com.mysql.jdbc.Driver");
