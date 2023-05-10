@@ -110,6 +110,7 @@ public class Main {
                                                                                                                                          \s
                                                                                                                                          \s
                     """;
+            System.out.println(artWork);
         } else if (option == 2) {
             artWork = """
 
@@ -122,6 +123,8 @@ public class Main {
                                                                                                                                                  \s
                                                                                                                                                  \s
                     """;
+            System.out.println(artWork);
+
         }
     }
 }
