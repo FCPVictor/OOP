@@ -4,11 +4,44 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 public class Main {
 
+    /**
+     * public class UserLogin {
+     *     private static User currentLoggedInUser;
+     *
+     *     public static User getCurrentLoggedInUser() {
+     *         if(currentLoggedInUser == null) {
+     *             return new User();
+     *         }
+     *         return currentLoggedInUser;
+     *     }
+     *
+     *     public static void setCurrentLoggedInUser(User user) {
+     *         currentLoggedInUser = user;
+     *     }
+     *
+     * }
+     *
+     */
+
+    /*
+    * User user = UserLogin.getCurrentLoggedInUser();
+    * UserService userService = new UserService();
+    * String username = getUsernameInputFromConsoleLine();
+    * String passwordFromUser = getPasswordInputFromConsoleLine();
+    * String passwordFromDb = userService.getPasswordByUsername(username);
+    * if(passwordFromuser.equals(passwordFromDb)) {
+    *   user.setUsername(username);
+    *   user.setPassword(passwordFromDb);
+    *   UserLogin.setCurrentLoggedInUser(user);
+    * }
+    *
+    * */
 
 
             public static void main(String[] args) {
                 User user = null;
                 DA da = new DA();
+                double subtotal = 0.0;
 
                 Scanner scanner = new Scanner(System.in);
 
@@ -62,6 +95,8 @@ public class Main {
                     }
                 } while (user == null);
 
+
+                //Payment part
 
 
 
