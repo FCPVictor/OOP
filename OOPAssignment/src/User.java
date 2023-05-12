@@ -1,9 +1,18 @@
 
 
 public class User {
+
+    private int customerID;
     private  String username;
     private  String password;
 
+    public int getCustomerID() {
+        return customerID;
+    }
+
+    public void setCustomerID(int customerID) {
+        this.customerID = customerID;
+    }
 
     public String getUsername() {
         return username;

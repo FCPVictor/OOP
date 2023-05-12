@@ -53,4 +53,38 @@ public class DA {
         }
         return rs;
     }
+
+    //Implement polymorphism
+    public ResultSet readRecord(int id){
+        ResultSet rs = null;
+        try{
+            // Prepare a SELECT query to retrieve user data
+            String sql = "SELECT * FROM javaLogin WHERE CustomerID=?";
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setInt(1,id);
+            rs = stmt.executeQuery();
+
+        } catch(SQLException e){
+            System.out.println(e.getMessage());
+
+        }
+        return rs;
+    }
+
+//    public ResultSet getCustomerID(String username, String password){
+//
+//        ResultSet rs = null;
+//
+//        try{
+//            String sql = "SELECT * FROM javaLogin WHERE username=? AND password=?";
+//            PreparedStatement stmt = conn.prepareStatement(sql);
+//            stmt.setString(1,username);
+//            stmt.setString(2, password);
+//            rs = stmt.executeQuery();
+//        }catch(SQLException e) {
+//            System.out.println(e.getMessage());
+//
+//        }
+//        return rs;
+//    }
 }

@@ -83,6 +83,7 @@ public class Main {
                             ResultSet rs = da.readRecord(username, password);
                             if (rs.next()) {
                                 user = new User();
+                                user.setCustomerID(Integer.parseInt(rs.getString("CustomerID")));
                                 user.setUsername(username);
                                 user.setPassword(password);
                                 System.out.println("Logged in successfully");
@@ -94,7 +95,7 @@ public class Main {
                         }
                     }
                 } while (user == null);
-
+                //System.out.println(user.getCustomerID());
 
                 //Payment part
                 Payment.printPaymentArt();
