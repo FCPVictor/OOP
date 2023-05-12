@@ -97,7 +97,7 @@ public class Main {
 
 
                 //Payment part
-
+                Payment.printPaymentArt();
 
 
 

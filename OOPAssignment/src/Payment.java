@@ -20,6 +20,20 @@ abstract class Payment {
     public String toString() {
         return "Payment Type: " + paymentType + "\nAmount: $" + amount;
     }
+
+    public static void printPaymentArt() {
+        String artWork;
+
+        artWork = """
+                _____    __     ____  __ ______ _   _ _______        \s
+                |  __ \\ /\\\\ \\   / /  \\/  |  ____| \\ | |__   __| \s
+                | |__) /  \\\\ \\_/ /| \\  / | |__  |  \\| |  | |     \s
+                |  ___/ /\\ \\\\   / | |\\/| |  __| | . ` |  | |      \s
+                | |  / ____ \\| |  | |  | | |____| |\\  |  | |        \s
+                |_| /_/    \\_\\_|  |_|  |_|______|_| \\_|  |_|       \s
+                                                              
+                    """;
+    }
 }
     // Subclass of Payment for cash payments
     class CashPayment extends Payment{
@@ -85,5 +99,7 @@ abstract class Payment {
             return super.toString() + "\nUsername: " + accUsername + "\nPassword: " + accPassword + "\n";
         }
     }
+
+
 
 
