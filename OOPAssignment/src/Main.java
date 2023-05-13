@@ -695,12 +695,13 @@ public class Main {
         customer.addReservation(reservation);
 
         //Display Reservation Summary
+        String custResSum = customer.toString();
+        System.out.println(custResSum);
 
         System.out.println("\n         *****************************");
         System.out.println("         |   Thank You For Booking   |");
         System.out.println("         *****************************");
-        String custResSum = customer.toString();
-        System.out.println(custResSum);
+
 
         return customer;
     }
@@ -824,7 +825,7 @@ public class Main {
                 if (selection.equals("1")) {
                     System.out.println("Holiday Inn Subang Hotel Transport Service");
                     for (int i = 0; i < transMenuA.length; i++) {
-                        System.out.printf("%-4d%-40sRM %.2f%n", i + 1, transMenuA[i].getName(), transMenuA[i].getPrice());
+                        System.out.printf("%-4d%-25sRM %.2f%n", i + 1, transMenuA[i].getName(), transMenuA[i].getPrice());
                     }
                     boolean validateTrans = true;
                     while (validateTrans) {
@@ -860,7 +861,7 @@ public class Main {
                 } else if (selection.equals("2")) {
                     System.out.println("Holiday Inn Subang Hotel Food Service");
                     for (int i = 0; i < transMenuA.length; i++) {
-                        System.out.printf("%-4d%-40sRM %.2f%n", i + 1, foodMenuA[i].getName(), foodMenuA[i].getPrice());
+                        System.out.printf("%-4d%-25sRM %.2f%n", i + 1, foodMenuA[i].getName(), foodMenuA[i].getPrice());
                     }
                     boolean validateFood = true;
                     while (validateFood) {
@@ -894,7 +895,7 @@ public class Main {
                 } else if (selection.equals("3")) {
                     System.out.println("Holiday Inn Subang Hotel Beverage Service");
                     for (int i = 0; i < bevMenuA.length; i++) {
-                        System.out.printf("%-4d%-40sRM %.2f%n", i + 1, bevMenuA[i].getName(), bevMenuA[i].getPrice());
+                        System.out.printf("%-4d%-25sRM %.2f%n", i + 1, bevMenuA[i].getName(), bevMenuA[i].getPrice());
                     }
                     boolean validateBev = true;
                     while (validateBev) {
@@ -955,8 +956,9 @@ public class Main {
                 System.out.printf("%-4d%-20s %-2d %-1s RM%.2f %n", (i + 1), bevOrder.getName(), bevOrder.getQuantity(),"x", bevSubTotal);
                 subTotal += bevSubTotal;
             }
-
-            System.out.println("Thank you for ordering services. \nTotal Amount for services is RM " + String.format("%.2f", subTotal));
+            System.out.print("\n-------------Service Details----------------");
+            System.out.println("\nService Price   : RM" + String.format("%.2f",subTotal));
+            System.out.print("\n--------------------------------------------");
             fd.setServiceSubtotal(subTotal);
 
         } else if (hotelChoice.equals("Hilton Kuala Lumpur")) {
@@ -968,7 +970,7 @@ public class Main {
                 if (selection.equals("1")) {
                     System.out.println("Hilton Kuala Lumpur Hotel Transport Service");
                     for (int i = 0; i < transMenuB.length; i++) {
-                        System.out.printf("%-4d%-40sRM %.2f%n", i + 1, transMenuB[i].getName(), transMenuB[i].getPrice());
+                        System.out.printf("%-4d%-25sRM %.2f%n", i + 1, transMenuB[i].getName(), transMenuB[i].getPrice());
                     }
                     boolean validateTrans = true;
                     while (validateTrans) {
@@ -1001,10 +1003,10 @@ public class Main {
 
                     }
 
-                } else if (selection.equals("Hilton Kuala Lumpur")) {
+                } else if (selection.equals("2")) {
                     System.out.println("Hilton Kuala Lumpur Hotel Food Service");
                     for (int i = 0; i < foodMenuB.length; i++) {
-                        System.out.printf("%-4d%-40sRM %.2f%n", i + 1, foodMenuB[i].getName(), foodMenuB[i].getPrice());
+                        System.out.printf("%-4d%-25sRM %.2f%n", i + 1, foodMenuB[i].getName(), foodMenuB[i].getPrice());
                     }
                     boolean validateFood = true;
                     while (validateFood) {
@@ -1038,7 +1040,7 @@ public class Main {
                 } else if (selection.equals("3")) {
                     System.out.println("Hilton Kuala Lumpur Hotel Beverage Service");
                     for (int i = 0; i < bevMenuB.length; i++) {
-                        System.out.printf("%-4d%-40sRM %.2f%n", i + 1, bevMenuB[i].getName(), bevMenuB[i].getPrice());
+                        System.out.printf("%-4d%-25sRM %.2f%n", i + 1, bevMenuB[i].getName(), bevMenuB[i].getPrice());
                     }
                     boolean validateBev = true;
                     while (validateBev) {
@@ -1099,8 +1101,9 @@ public class Main {
                 System.out.printf("%-4d%-20s %-2d %-1s RM%.2f %n", (i + 1), bevOrder.getName(), bevOrder.getQuantity(),"x", bevSubTotal);
                 subTotal += bevSubTotal;
             }
-
-            System.out.println("Thank you for ordering services. \nTotal Amount for services is RM " + String.format("%.2f", subTotal));
+            System.out.print("\n-------------Service Details----------------");
+            System.out.println("\nService Price   : RM" + String.format("%.2f",subTotal));
+            System.out.print("\n--------------------------------------------");
             fd.setServiceSubtotal(subTotal);
         } else if (hotelChoice.equals("Hard Rock Kuala Lumpur")) {
             boolean validService = true;
@@ -1111,7 +1114,7 @@ public class Main {
                 if (selection.equals("1")) {
                     System.out.println("Hard Rock Kuala Lumpur Hotel Transport Service");
                     for (int i = 0; i < transMenuC.length; i++) {
-                        System.out.printf("%-4d%-40sRM %.2f%n", i + 1, transMenuC[i].getName(), transMenuC[i].getPrice());
+                        System.out.printf("%-4d%-25sRM %.2f%n", i + 1, transMenuC[i].getName(), transMenuC[i].getPrice());
                     }
                     boolean validateTrans = true;
                     while (validateTrans) {
@@ -1147,7 +1150,7 @@ public class Main {
                 } else if (selection.equals("2")) {
                     System.out.println("Hard Rock Kuala Lumpur Hotel Food Service");
                     for (int i = 0; i < foodMenuC.length; i++) {
-                        System.out.printf("%-4d%-40sRM %.2f%n", i + 1, foodMenuC[i].getName(), foodMenuC[i].getPrice());
+                        System.out.printf("%-4d%-25sRM %.2f%n", i + 1, foodMenuC[i].getName(), foodMenuC[i].getPrice());
                     }
                     boolean validateFood = true;
                     while (validateFood) {
@@ -1181,7 +1184,7 @@ public class Main {
                 } else if (selection.equals("3")) {
                     System.out.println("Hard Rock Kuala Lumpur Hotel Beverage Service");
                     for (int i = 0; i < bevMenuC.length; i++) {
-                        System.out.printf("%-4d%-40sRM %.2f%n", i + 1, bevMenuC[i].getName(), bevMenuC[i].getPrice());
+                        System.out.printf("%-4d%-25sRM %.2f%n", i + 1, bevMenuC[i].getName(), bevMenuC[i].getPrice());
                     }
                     boolean validateBev = true;
                     while (validateBev) {
@@ -1242,8 +1245,9 @@ public class Main {
                 System.out.printf("%-4d%-20s %-2d %-1s RM%.2f %n", (i + 1), bevOrder.getName(), bevOrder.getQuantity(),"x", bevSubTotal);
                 subTotal += bevSubTotal;
             }
-
-            System.out.println("Thank you for ordering services. \nTotal Amount for services is RM " + String.format("%.2f", subTotal));
+            System.out.print("\n-------------Service Details----------------");
+            System.out.println("\nService Price   : RM" + String.format("%.2f",subTotal));
+            System.out.print("\n--------------------------------------------");
             fd.setServiceSubtotal(subTotal);
         } else if (hotelChoice.equals("Sepang Resort")) {
             boolean validService = true;
@@ -1254,7 +1258,7 @@ public class Main {
                 if (selection.equals("1")) {
                     System.out.println("Sepang Resort Hotel Transport Service");
                     for (int i =0; i < transMenuD.length;i ++){
-                        System.out.printf("%-4d%-40sRM %.2f%n",i+1 ,   transMenuD[i].getName() ,  transMenuD[i].getPrice());
+                        System.out.printf("%-4d%-25sRM %.2f%n",i+1 ,   transMenuD[i].getName() ,  transMenuD[i].getPrice());
                     }
                     boolean validateTrans = true;
                     while (validateTrans) {
@@ -1289,7 +1293,7 @@ public class Main {
                 } else if (selection.equals("2")) {
                     System.out.println("Sepang Resort Hotel Food Service");
                     for (int i =0; i < foodMenuD.length;i ++){
-                        System.out.printf("%-4d%-40sRM %.2f%n",i+1 ,   foodMenuD[i].getName() ,  foodMenuD[i].getPrice());
+                        System.out.printf("%-4d%-25sRM %.2f%n",i+1 ,   foodMenuD[i].getName() ,  foodMenuD[i].getPrice());
                     }
                     boolean validateFood = true;
                     while (validateFood) {
@@ -1323,7 +1327,7 @@ public class Main {
                 } else if (selection.equals("3")) {
                     System.out.println("Sepang Resort Hotel Beverage Service");
                     for (int i =0; i < bevMenuD.length;i ++){
-                        System.out.printf("%-4d%-40sRM %.2f%n",i+1 ,   bevMenuD[i].getName() ,  bevMenuD[i].getPrice());
+                        System.out.printf("%-4d%-25sRM %.2f%n",i+1 ,   bevMenuD[i].getName() ,  bevMenuD[i].getPrice());
                     }
                     boolean validateBev = true;
                     while (validateBev) {
@@ -1398,7 +1402,7 @@ public class Main {
                 if (selection.equals("1")) {
                     System.out.println("Le Meridien Kuala Lumpur Transport Service");
                     for (int i =0; i < transMenuE.length;i ++){
-                        System.out.printf("%-4d%-40sRM %.2f%n",i+1 ,   transMenuE[i].getName() ,  transMenuE[i].getPrice());
+                        System.out.printf("%-4d%-25sRM %.2f%n",i+1 ,   transMenuE[i].getName() ,  transMenuE[i].getPrice());
                     }
                     boolean validateTrans = true;
                     while (validateTrans) {
@@ -1434,7 +1438,7 @@ public class Main {
                 } else if (selection.equals("2")) {
                     System.out.println("Le Meridien Kuala Lumpur Hotel Food Service");
                     for (int i =0; i < foodMenuE.length;i ++){
-                        System.out.printf("%-4d%-40sRM %.2f%n",i+1 ,   foodMenuE[i].getName() ,  foodMenuE[i].getPrice());
+                        System.out.printf("%-4d%-25sRM %.2f%n",i+1 ,   foodMenuE[i].getName() ,  foodMenuE[i].getPrice());
                     }
                     boolean validateFood = true;
                     while (validateFood) {
@@ -1468,7 +1472,7 @@ public class Main {
                 } else if (selection.equals("3")) {
                     System.out.println("Le Meridien Kuala Lumpur Hotel Beverage Service");
                     for (int i =0; i < bevMenuE.length;i ++){
-                        System.out.printf("%-4d%-40sRM %.2f%n",i+1 ,   bevMenuE[i].getName() ,  bevMenuE[i].getPrice());
+                        System.out.printf("%-4d%-25sRM %.2f%n",i+1 ,   bevMenuE[i].getName() ,  bevMenuE[i].getPrice());
                     }
                     boolean validateBev = true;
                     while (validateBev) {
@@ -1529,8 +1533,10 @@ public class Main {
                 System.out.printf("%-4d%-20s %-2d %-1s RM%.2f %n", (i + 1), bevOrder.getName(), bevOrder.getQuantity(),"x", bevSubTotal);
                 subTotal += bevSubTotal;
             }
+            System.out.print("\n-------------Service Details----------------");
+            System.out.println("\nService Price   : RM" + String.format("%.2f",subTotal));
+            System.out.print("\n--------------------------------------------");
 
-            System.out.println("Thank you for ordering services. \nTotal Amount for services is RM " + String.format("%.2f",subTotal));
             fd.setServiceSubtotal(subTotal);
 
         } else {
@@ -1540,13 +1546,22 @@ public class Main {
     }
     public static void displayServiceMenu(){
         System.out.println();
-        System.out.printf("%78s","*************** Services Menu ***************\n");
+        System.out.println("""
+                
+                  ______   ________  _______  ____   ____  _____   ______  ________   ____    ____  ________  ____  _____  _____  _____ \s
+                .' ____ \\ |_   __  ||_   __ \\|_  _| |_  _||_   _|.' ___  ||_   __  | |_   \\  /   _||_   __  ||_   \\|_   _||_   _||_   _|\s
+                | (___ \\_|  | |_ \\_|  | |__) | \\ \\   / /    | | / .'   \\_|  | |_ \\_|   |   \\/   |    | |_ \\_|  |   \\ | |    | |    | |  \s
+                 _.____`.   |  _| _   |  __ /   \\ \\ / /     | | | |         |  _| _    | |\\  /| |    |  _| _   | |\\ \\| |    | '    ' |  \s
+                | \\____) | _| |__/ | _| |  \\ \\_  \\ ' /     _| |_\\ `.___.'\\ _| |__/ |  _| |_\\/_| |_  _| |__/ | _| |_\\   |_    \\ \\__/ /   \s
+                 \\______.'|________||____| |___|  \\_/     |_____|`.____ .'|________| |_____||_____||________||_____|\\____|    `.__.'    \s
+                                                                                                                                        \s
+                """);
         System.out.printf("%78s","=====================================================\n");
         System.out.printf("%79s","                  1.Transport Menu                   \n");
         System.out.printf("%79s","                  2.Foods Menu                       \n");
         System.out.printf("%79s","                  3.Beverage Menu                    \n");
-        System.out.printf("%79s","                     4.Exit                           \n");
-        System.out.printf("%78s","======================================================\n");
-        System.out.printf("%70s","      PLEASE SELECT THE MENU CATEGORY         \n");
+        System.out.printf("%79s","                  4.Exit                             \n");
+        System.out.printf("%78s","=====================================================\n");
+        System.out.printf("%70s","            PLEASE SELECT THE MENU CATEGORY          \n");
     }
 }

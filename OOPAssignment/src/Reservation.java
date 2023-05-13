@@ -1,3 +1,5 @@
+import Service.FoodMenu;
+
 import java.time.LocalDate;
 import java.time.Period;
 
@@ -11,6 +13,8 @@ public class Reservation {
     private Hotel hotel;
     private String hotelName;
     private Room room;
+
+
 
     public Reservation() {
     }
@@ -114,9 +118,9 @@ public class Reservation {
                 "Check-out Date : " + checkoutdate.toString() + "\n" +
                 "Pax            : " + getPax() + "\n" +
                 "Days of Stay   : " + calNumDays() + "\n" +
-                "Room Price     : " + room.getPrice() +"\n" +
+                "Room Price     : RM" + room.getPrice() +"\n" +
                 "---------------------------------------------\n" +
-                "Total Price    : " + calTotalRoomPrice() + "\n" +
+                "Total Price    : RM" + calTotalRoomPrice() + "\n" +
                 "---------------------------------------------\n";
     }
 
