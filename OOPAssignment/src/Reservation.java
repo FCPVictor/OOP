@@ -10,12 +10,14 @@ public class Reservation {
     private Hotel hotel;
     private String hotelName;
     private Room room;
+    private double roomPrice;
+    private long numDays;
     private double totalPrice;
 
     public Reservation() {
     }
 
-    public Reservation(Customer customer, int resId, LocalDate checkindate, LocalDate checkoutdate, int pax, Hotel hotel, String hotelName, Room room, double totalPrice) {
+    public Reservation(Customer customer, int resId, LocalDate checkindate, LocalDate checkoutdate, int pax, Hotel hotel, String hotelName, Room room, double roomPrice,long numDays, double totalPrice) {
         this.customer = customer;
         this.resId = nextResId;
         this.checkindate = checkindate;
@@ -24,6 +26,8 @@ public class Reservation {
         this.hotel = hotel;
         this.hotelName = hotelName;
         this.room = room;
+        this.roomPrice = roomPrice;
+        this.numDays = numDays;
         this.totalPrice = totalPrice;
 
         customer.addReservation(this);
@@ -94,6 +98,22 @@ public class Reservation {
         this.room = room;
     }
 
+    public double getRoomPrice() {
+        return roomPrice;
+    }
+
+    public void setRoomPrice(double roomPrice) {
+        this.roomPrice = roomPrice;
+    }
+
+    public long getNumDays() {
+        return numDays;
+    }
+
+    public void setNumDays(long numDays) {
+        this.numDays = numDays;
+    }
+
     public double getTotalPrice() {
         return totalPrice;
     }
@@ -115,11 +135,20 @@ public class Reservation {
 
     @Override
     public String toString() {
-        return "\n-----------Reservation Details----------\n" +
+        return "\n-----------Reservation Details--------------\n" +
                 "Hotel Name     : " + hotel.getHotelName() + "\n" +
                 "Room Type      : " + room.getRoomType() + "\n" +
                 "Check-in Date  : " + checkindate.toString() + "\n" +
                 "Check-out Date : " + checkoutdate.toString() + "\n" +
-                "Pax            : " + getPax() + "\n";
+                "Pax            : " + getPax() + "\n" +
+                "Days of Stay   : " + getNumDays() + "\n" +
+                "Room Price     : " + getRoomPrice() +"\n" +
+                "---------------------------------------------\n" +
+                "Total Price    : " + getTotalPrice() + "\n" +
+                "---------------------------------------------\n";
+    }
+
+    public double calTotalRoomPrice(double roomPrice, long numberOfDays) {
+        return roomPrice * numberOfDays;
     }
 }

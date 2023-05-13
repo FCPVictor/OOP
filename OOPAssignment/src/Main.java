@@ -45,38 +45,13 @@ public class Main {
      *
      * */
 
+    static FoodMenu fd = new FoodMenu();
 
 
-    public static void printPaymentArt() {
-        String artWork;
 
-        artWork = """
-                    _        _        _        _        _        _        _        _        _        _        _   \s
-                 /\\| |/\\  /\\| |/\\  /\\| |/\\  /\\| |/\\  /\\| |/\\  /\\| |/\\  /\\| |/\\  /\\| |/\\  /\\| |/\\  /\\| |/\\  /\\| |/\\\s
-                 \\ ` ' /  \\ ` ' /  \\ ` ' /  \\ ` ' /  \\ ` ' /  \\ ` ' /  \\ ` ' /  \\ ` ' /  \\ ` ' /  \\ ` ' /  \\ ` ' /\s
-                |_     _||_     _||_     _||_     _||_     _||_     _||_     _||_     _||_     _||_     _||_     _|
-                 / , . \\  / , . \\  / , . \\  / , . \\  / , . \\  / , . \\  / , . \\  / , . \\  / , . \\  / , . \\  / , . \\\s
-                 \\/|_|\\/  \\/|_|\\/  \\/|_|\\/  \\/|_|\\/  \\/|_|\\/  \\/|_|\\/  \\/|_|\\/  \\/|_|\\/  \\/|_|\\/  \\/|_|\\/  \\/|_|\\/\s
-                    _      _____      __     __ __  __  ______  _   _  _______      _                             \s
-                 /\\| |/\\  |  __ \\  /\\ \\ \\   / /|  \\/  ||  ____|| \\ | ||__   __|  /\\| |/\\                          \s
-                 \\ ` ' /  | |__) |/  \\ \\ \\_/ / | \\  / || |__   |  \\| |   | |     \\ ` ' /                          \s
-                |_     _| |  ___// /\\ \\ \\   /  | |\\/| ||  __|  | . ` |   | |    |_     _|                         \s
-                 / , . \\  | |   / ____ \\ | |   | |  | || |____ | |\\  |   | |     / , . \\                          \s
-                 \\/|_|\\/  |_|  /_/    \\_\\|_|   |_|  |_||______||_| \\_|   |_|     \\/|_|\\/                          \s
-                    _        _        _        _        _        _        _        _        _        _        _   \s
-                 /\\| |/\\  /\\| |/\\  /\\| |/\\  /\\| |/\\  /\\| |/\\  /\\| |/\\  /\\| |/\\  /\\| |/\\  /\\| |/\\  /\\| |/\\  /\\| |/\\\s
-                 \\ ` ' /  \\ ` ' /  \\ ` ' /  \\ ` ' /  \\ ` ' /  \\ ` ' /  \\ ` ' /  \\ ` ' /  \\ ` ' /  \\ ` ' /  \\ ` ' /\s
-                |_     _||_     _||_     _||_     _||_     _||_     _||_     _||_     _||_     _||_     _||_     _|
-                 / , . \\  / , . \\  / , . \\  / , . \\  / , . \\  / , . \\  / , . \\  / , . \\  / , . \\  / , . \\  / , . \\\s
-                 \\/|_|\\/  \\/|_|\\/  \\/|_|\\/  \\/|_|\\/  \\/|_|\\/  \\/|_|\\/  \\/|_|\\/  \\/|_|\\/  \\/|_|\\/  \\/|_|\\/  \\/|_|\\/\s
-                                                                                                                  \s
-                    """;
-        System.out.println(artWork);
-    }
-
-    public double generateRandom() {
-        return ThreadLocalRandom.current().nextDouble(10, 1000);
-    }
+//    public double generateRandom() {
+//        return ThreadLocalRandom.current().nextDouble(10, 1000);
+//    } // Temporary for data generate only not used anymore
 
     public double getPayment(double subtotal) {
         Scanner scanner = new Scanner(System.in);
@@ -130,6 +105,7 @@ public class Main {
     public static void main(String[] args) {
         User user = null;
         DA da = new DA();
+        Print print = new Print();
 
         Scanner scanner = new Scanner(System.in);
 
@@ -148,7 +124,7 @@ public class Main {
             }
             if (userOption == 2) {
                 Scanner scanner1 = new Scanner(System.in);
-                printArtWork(2);
+                print.printArtWork(2);
                 // Prompt the user to enter their username and password
                 System.out.print("Enter your username: ");
                 String username = scanner1.nextLine();
@@ -160,7 +136,7 @@ public class Main {
 
             } else if (userOption == 1) {
                 Scanner scanner2 = new Scanner(System.in);
-                printArtWork(1);
+                print.printArtWork(1);
                 try {
                     System.out.print("Enter your username to login: ");
                     String username = scanner2.nextLine();
@@ -185,6 +161,8 @@ public class Main {
         } while (user == null);
         //System.out.println(user.getCustomerID());
 
+        Customer customer = new Customer();
+        customer.setCustId(user.getCustomerID() + ""); // convert datatype to String
         //Main menu
         ArrayList<Hotel> hotels = new ArrayList<>();
         ArrayList<Room> rooms = new ArrayList<>();
@@ -230,7 +208,8 @@ public class Main {
             System.out.println("1. Search for Hotels");
             System.out.println("2. Reservation");
             System.out.println("3. Top Up");
-            System.out.println("4. Exit");
+            System.out.println("4. Payment");
+            System.out.println("5. Exit");
 
             System.out.print("Enter your choice: ");
             choice = scanner.nextInt();
@@ -471,7 +450,7 @@ public class Main {
 
                     switch (resinput){
                         case 1:
-                            MakeReservationProcess(hotels, rooms);
+                            customer = MakeReservationProcess(hotels, rooms, customer);
                         case 2:
                             break;
 
@@ -483,24 +462,36 @@ public class Main {
                             System.out.println("Invalid Input");
                             break;
                     }
-//                    //Payment part
-//                    Scanner scanner1 = new Scanner(System.in);
-//                    double subtotal = 0.0;
-//                    double userPay = 0.0;
-//                    double balance = 0.0;
-//                    Main m = new Main();
-//
-//                    printPaymentArt();
-//                    subtotal = m.generateRandom();
-//
-//                    String method = m.paymentMethods(subtotal);
-//
-//                    System.out.printf("Thank you for visiting! \nPayment method: " + method + "\nPlease pay:RM %.2f\n", subtotal);
-//
-//                    balance = m.getPayment(subtotal);
 
+
+                    //Choice
                 case 3:
                     System.out.println("Thank you for using Hotel Booking System.");
+                    break;
+
+                case 4:
+                    //Payment part
+                    Scanner scanner1 = new Scanner(System.in);
+                    double subtotal = 0.0;
+                    double userPay = 0.0;
+                    double balance = 0.0;
+                    Main m = new Main();
+
+                    int lastIndex = customer.getReservation().size() - 1;
+
+                    print.printPaymentArt();
+                    subtotal = (fd.getServiceSubtotal() + customer.getReservation().get(lastIndex).getTotalPrice());
+                    System.out.printf("Amount to pay: RM %.2f\n", subtotal);
+                    String method = m.paymentMethods(subtotal);
+
+                    System.out.printf("Thank you for visiting! \nPayment method: " + method + "\nPlease pay:RM %.2f\n", subtotal);
+
+                    balance = m.getPayment(subtotal);
+                    break;
+
+                case 5:
+                    //Exit
+                    System.out.println("Thank you!!");
                     break;
 
                 default:
@@ -508,18 +499,18 @@ public class Main {
                     break;
             }
 
-        } while (choice != 3);
+        } while (choice != 5);
 
 
     }
 
-    static void MakeReservationProcess(ArrayList<Hotel> hotels ,
-                                       ArrayList<Room> rooms ) {
-        boolean validpax = true;
-        boolean validdate = true;
-        boolean validroom = true;
+    static Customer MakeReservationProcess(ArrayList<Hotel> hotels ,
+                                       ArrayList<Room> rooms, Customer customer ) {
+        boolean validPax = true;
+        boolean validDate = true;
+        boolean validRoom = true;
         int pax = 0;
-        Customer customer = new Customer();
+
         Reservation reservation = new Reservation();
         Scanner input = new Scanner(System.in);
 
@@ -555,6 +546,7 @@ public class Main {
         Hotel selectedHotel = hotels.get(choosehotel - 1);
         reservation.setHotel(selectedHotel);
 
+
         Hotel bookedHotel = reservation.getHotel();
         System.out.println("\n************************************************************");
         System.out.println("You are making reservation for : " + bookedHotel.getHotelName());
@@ -567,18 +559,18 @@ public class Main {
             pax = input.nextInt();
 
             if (pax <= 0) {
-                validpax = false;
+                validPax = false;
                 System.out.println("Please Enter Valid Number Of Pax");
 
             } else if (pax > 6) {
-                validpax = false;
+                validPax = false;
                 System.out.println("\nNo Suitable Room For More Than 6 Pax\nPlease Try Again\n");
             } else {
                 reservation.setPax(pax);
-                validpax = true;
+                validPax = true;
             }
 
-        } while (validpax == false);
+        } while (validPax == false);
 
         //Get check in check out date
 
@@ -608,25 +600,29 @@ public class Main {
                     throw new IllegalArgumentException("Invalid date range. Please enter a date between " + minDate + " and " + maxDate);
                 }
 
+                if (Indate.equals(Outdate)) {
+                    throw new IllegalArgumentException("Check-out date cannot be the same as check-in date");
+                }
+
                 reservation.setCheckindate(Indate);
                 reservation.setCheckoutdate(Outdate);
 
-                validdate = true;
+                validDate = true;
 
                 if (Outdate.isBefore(Indate)) { // check if check-out date is before check-in date
-                    validdate = false;
+                    validDate = false;
                     throw new IllegalArgumentException("Check-out date must be after check-in date");
                 }
 
             } catch (DateTimeParseException e) {
-                validdate = false;
+                validDate = false;
                 System.out.println("\nInvalid Date\nPlease Try Again\n");
             } catch (IllegalArgumentException e) {
-                validdate = false;
+                validDate = false;
                 System.out.println("\n" + e.getMessage() + "\nPlease Try Again\n");
             }
 
-        } while (validdate == false);
+        } while (validDate == false);
 
         int j = 1;
 
@@ -635,9 +631,11 @@ public class Main {
         for (Room room : selectedHotel.getRooms()) {
             if (room.getMaxPax() >= reservation.getPax()) {
                 String roomType = room.getRoomType(); //get the room type from the room object
+                double roomPrice = room.getPrice();
+
                 System.out.println(j + ". " + roomType + " (Max Pax: " + room.getMaxPax() + ") - RM " + room.getPrice());
 
-                roomDisplay.add(new RoomDisplay(j, roomType));
+                roomDisplay.add(new RoomDisplay(j, roomType,roomPrice));
 
                 j++;
             }
@@ -651,12 +649,13 @@ public class Main {
                 int inputRoom = input.nextInt();
 
                 Room selectedRoom = null;
+                double selectedRoomPrice = 0;
                 for (RoomDisplay rd : roomDisplay) {
                     // check if input matches the displayId
                     if (inputRoom == rd.getRoomNum()) {
                         // print roomType associated with matched RoomDisplay object
                         System.out.println("\nYou have selected: " + rd.getRoomType());
-                        validroom = true;
+                        validRoom = true;
 
                         // find the corresponding Room object based on the selected room type
                         selectedRoom = selectedHotel.getRooms().stream()
@@ -664,23 +663,35 @@ public class Main {
                                 .findFirst()
                                 .orElse(null);
 
+                        selectedRoomPrice = selectedHotel.getRooms().stream()
+                                .filter(room -> room.getPrice() == rd.getRoomPrice())
+                                .mapToDouble(Room::getPrice) // add this line to get the price value
+                                .findFirst()
+                                .orElse(0.0);
+
                         reservation.setRoom(selectedRoom);
+                        reservation.setTotalPrice(selectedRoomPrice); //set room price
                         break; // exit loop since we found a match
                     }
                 }
 
                 if (selectedRoom == null) {
                     System.out.println("Please Enter a Valid Room Number");
-                    validroom = false;
+                    validRoom = false;
                 }
 
             } catch (InputMismatchException e) {
                 System.out.println("\nInvalid Input\nPlease Try Again\n");
                 input.nextLine(); // consume the invalid input
-                validroom = false;
+                validRoom = false;
             }
-        } while (validroom == false);
+        } while (validRoom == false);
 
+        //service
+        Service(selectedHotel);
+
+        double totalRoomPrice = reservation.calTotalRoomPrice(reservation.getRoomPrice(), reservation.getNumDays());
+        reservation.setTotalPrice(totalRoomPrice);
         //Store data to customer class
         customer.addReservation(reservation);
 
@@ -692,6 +703,7 @@ public class Main {
         String custResSum = customer.toString();
         System.out.println(custResSum);
 
+        return customer;
     }
 
 
@@ -722,37 +734,847 @@ public class Main {
         System.out.print("\t\tEnter the desired option:    ");
     }
 
-    public static void printArtWork(int option) {
+    public static void Service(Hotel selectedHotel) {
+        Scanner scan = new Scanner(System.in);
+        //Hotel A Menu
+        TransMenu[] transMenuA = {new TransMenu("Valet Parking", 50.00),
+                new TransMenu("Taxi from KLIA", 65.00),
+                new TransMenu("Taxi from KLIA2", 65.00),
+                new TransMenu("Taxi from KL Sentral", 30.00),
+        };
 
-        String artWork;
-        if (option == 1) {
-            artWork = """
+        FoodMenu[] foodMenuA = {new FoodMenu("Burger", 35.50),
+                new FoodMenu("Steak", 50.50),
+                new FoodMenu("Chicken Chop", 22.90),
+                new FoodMenu("Spaghetti", 19.90),
+        };
 
-                     .o88b. db    db .d8888. d888888b  .d88b.  .88b  d88. d88888b d8888b.      db       .d88b.   d888b  d888888b d8b   db\s
-                    d8P  Y8 88    88 88'  YP `~~88~~' .8P  Y8. 88'YbdP`88 88'     88  `8D      88      .8P  Y8. 88' Y8b   `88'   888o  88\s
-                    8P      88    88 `8bo.      88    88    88 88  88  88 88ooooo 88oobY'      88      88    88 88         88    88V8o 88\s
-                    8b      88    88   `Y8b.    88    88    88 88  88  88 88~~~~~ 88`8b        88      88    88 88  ooo    88    88 V8o88\s
-                    Y8b  d8 88b  d88 db   8D    88    `8b  d8' 88  88  88 88.     88 `88.      88booo. `8b  d8' 88. ~8~   .88.   88  V888\s
-                     `Y88P' ~Y8888P' `8888Y'    YP     `Y88P'  YP  YP  YP Y88888P 88   YD      Y88888P  `Y88P'   Y888P  Y888888P VP   V8P\s
-                                                                                                                                         \s
-                                                                                                                                         \s
-                    """;
-            System.out.println(artWork);
-        } else if (option == 2) {
-            artWork = """
+        BevMenu[] bevMenuA = {new BevMenu("Coca-cola", 5.90),
+                new BevMenu("Sprite", 5.90),
+                new BevMenu("Ice Lemon Tea", 6.50),
+                new BevMenu("100 Plus", 5.90),
+        };
 
-                     .o88b. db    db .d8888. d888888b  .d88b.  .88b  d88. d88888b d8888b.      .d8888. d888888b  d888b  d8b   db db    db d8888b.\s
-                    d8P  Y8 88    88 88'  YP `~~88~~' .8P  Y8. 88'YbdP`88 88'     88  `8D      88'  YP   `88'   88' Y8b 888o  88 88    88 88  `8D\s
-                    8P      88    88 `8bo.      88    88    88 88  88  88 88ooooo 88oobY'      `8bo.      88    88      88V8o 88 88    88 88oodD'\s
-                    8b      88    88   `Y8b.    88    88    88 88  88  88 88~~~~~ 88`8b          `Y8b.    88    88  ooo 88 V8o88 88    88 88~~~  \s
-                    Y8b  d8 88b  d88 db   8D    88    `8b  d8' 88  88  88 88.     88 `88.      db   8D   .88.   88. ~8~ 88  V888 88b  d88 88     \s
-                     `Y88P' ~Y8888P' `8888Y'    YP     `Y88P'  YP  YP  YP Y88888P 88   YD      `8888Y' Y888888P  Y888P  VP   V8P ~Y8888P' 88     \s
-                                                                                                                                                 \s
-                                                                                                                                                 \s
-                    """;
-            System.out.println(artWork);
+        //Hotel B Menu
+        TransMenu[] transMenuB = {new TransMenu("Valet Parking", 150.00),
+                new TransMenu("Taxi from KLIA", 125.00),
+                new TransMenu("Taxi from KLIA2", 125.00),
+                new TransMenu("Taxi from KL Sentral", 80.00),
+        };
 
+        FoodMenu[] foodMenuB = {new FoodMenu("Lamb Shank", 64.90),
+                new FoodMenu("Seafood Aglio Olio", 45.90),
+                new FoodMenu("Grill Salmon", 59.90),
+                new FoodMenu("Beef Wellington", 79.90),
+        };
+
+        BevMenu[] bevMenuB = {new BevMenu("Blue Mountain Coffee", 38.80),
+                new BevMenu("Grand Jasmine Tea", 25.00),
+                new BevMenu("Highland Honey", 30.00),
+                new BevMenu("Red Wine", 99.90),
+        };
+
+        //Hotel C Menu
+        TransMenu[] transMenuC = {new TransMenu("Valet Parking", 50.00),
+                new TransMenu("Taxi from KLIA", 65.00),
+                new TransMenu("Taxi from KLIA2", 65.00),
+                new TransMenu("Taxi from KL Sentral", 30.00),
+        };
+
+        FoodMenu[] foodMenuC = {new FoodMenu("Chicken Burger", 35.50),
+                new FoodMenu("Chicken Tender", 29.90),
+                new FoodMenu("Hard Rock Nachos", 25.50),
+                new FoodMenu("New York Cheese Cake", 19.90),
+        };
+
+        BevMenu[] bevMenuC = {new BevMenu("Hurricane Cocktail ", 19.90),
+                new BevMenu("Margarita", 19.90),
+                new BevMenu("Long Island Iced Tea", 12.80),
+                new BevMenu("Classic Mojito", 19.90),
+        };
+
+        //Hotel D Menu
+        TransMenu[] transMenuD = {new TransMenu("Valet Parking", 30.00),
+                new TransMenu("Taxi from KLIA", 65.00),
+                new TransMenu("Taxi from KLIA2", 65.00),
+                new TransMenu("Taxi from KL Sentral", 30.00),
+        };
+
+        FoodMenu[] foodMenuD = {new FoodMenu("Nasi Lemak", 35.50),
+                new FoodMenu("Nasi Briyani", 12.80),
+                new FoodMenu("Curry Mutton", 15.90),
+                new FoodMenu("Fried Rice", 9.90),
+        };
+
+        BevMenu[] bevMenuD = {new BevMenu("Mineral Water", 3.00),
+                new BevMenu("Teh Tarik", 2.50),
+                new BevMenu("Chinese Tea", 1.90),
+                new BevMenu("Syrup Bandung", 2.50),
+        };
+
+        //Hotel E Menu
+        TransMenu[] transMenuE = {new TransMenu("Valet Parking", 120.00),
+                new TransMenu("Taxi from KLIA", 85.00),
+                new TransMenu("Taxi from KLIA2", 85.00),
+                new TransMenu("Taxi from KL Sentral", 50.00),
+        };
+
+        FoodMenu[] foodMenuE = {new FoodMenu("Rib Eye Steak", 50.00),
+                new FoodMenu("Sashimi and Sushi", 65.00),
+                new FoodMenu("Dim Sum", 65.00),
+                new FoodMenu("Malay Cuisine", 30.00),
+        };
+
+        BevMenu[] bevMenuE = {new BevMenu("Cocktails", 50.00),
+                new BevMenu("Red Vine", 65.00),
+                new BevMenu("Premium Honey", 65.00),
+                new BevMenu("Blue Mountain Coffee", 30.00),
+        };
+
+        double subTotal = 0;
+
+        //Array to record Service order
+        ArrayList<FoodMenu> foodOrders = new ArrayList<>();
+        ArrayList<BevMenu> bevOrders = new ArrayList<>();
+        ArrayList<TransMenu> transOrders = new ArrayList<>();
+        FoodMenu fOrder = new FoodMenu();
+        BevMenu bOrder = new BevMenu();
+        TransMenu tOrder = new TransMenu();
+
+        String hotelChoice = selectedHotel.getHotelName();
+
+        if (hotelChoice.equals("Holiday Inn Subang Jaya")) {
+            boolean validService = true;
+            while (validService) {
+                displayServiceMenu();
+                System.out.println("Enter your choice: ");
+                String selection = scan.nextLine();
+                if (selection.equals("1")) {
+                    System.out.println("Holiday Inn Subang Hotel Transport Service");
+                    for (int i = 0; i < transMenuA.length; i++) {
+                        System.out.printf("%-4d%-40sRM %.2f%n", i + 1, transMenuA[i].getName(), transMenuA[i].getPrice());
+                    }
+                    boolean validateTrans = true;
+                    while (validateTrans) {
+
+                        int t;
+                        int tQty;
+
+                        System.out.println();
+                        System.out.println("Which transport service you require? : ");
+                        String transChoice = scan.nextLine();
+                        System.out.println("How many transport service you require?: ");
+                        String transQty = scan.nextLine();
+                        try {
+                            t = Integer.parseInt(transChoice);
+                            tQty = Integer.parseInt(transQty);
+                            if (t >= 1 && t <= 4) {
+                                tOrder.setPrice(transMenuA[t - 1].getPrice());
+                                tOrder.setQuantity(tQty);
+                                transOrders.add(new TransMenu(transMenuA[t - 1].getName(), tOrder.getPrice(), tQty));
+                                break;
+                            } else if (t == 5) {
+                                System.exit(0);
+                            } else
+                                System.out.println("Invalid input for transport service. Please choose between 1-4.");
+                            validateTrans = true;
+                        } catch (NumberFormatException e) {
+                            System.out.println("Please input agn.");
+                            validateTrans = true;
+                        }
+
+                    }
+
+                } else if (selection.equals("2")) {
+                    System.out.println("Holiday Inn Subang Hotel Food Service");
+                    for (int i = 0; i < transMenuA.length; i++) {
+                        System.out.printf("%-4d%-40sRM %.2f%n", i + 1, foodMenuA[i].getName(), foodMenuA[i].getPrice());
+                    }
+                    boolean validateFood = true;
+                    while (validateFood) {
+
+                        int f;
+                        int fQty;
+                        System.out.println();
+                        System.out.println("What would you like to eat? : ");
+                        String foodChoice = scan.nextLine();
+                        System.out.println("How many would you like to order?: ");
+                        String foodQty = scan.nextLine();
+                        try {
+                            f = Integer.parseInt(foodChoice);
+                            fQty = Integer.parseInt(foodQty);
+                            if (f >= 1 && f <= 4) {
+                                fOrder.setPrice(foodMenuA[f - 1].getPrice());
+                                fOrder.setQuantity(fQty);
+                                foodOrders.add(new FoodMenu(foodMenuA[f - 1].getName(), fOrder.getPrice(), fQty));
+                                break;
+                            } else if (f == 5) {
+                                System.exit(0);
+                            } else
+                                System.out.println("Invalid input for food choice. Please choose between 1-4.");
+                            validateFood = true;
+                        } catch (NumberFormatException e) {
+                            System.out.println("Please input agn.");
+                            validateFood = true;
+                        }
+
+                    }
+                } else if (selection.equals("3")) {
+                    System.out.println("Holiday Inn Subang Hotel Beverage Service");
+                    for (int i = 0; i < bevMenuA.length; i++) {
+                        System.out.printf("%-4d%-40sRM %.2f%n", i + 1, bevMenuA[i].getName(), bevMenuA[i].getPrice());
+                    }
+                    boolean validateBev = true;
+                    while (validateBev) {
+                        int b;
+                        int bQty;
+                        System.out.println();
+                        System.out.println("What would you like to drink? : ");
+                        String bevChoice = scan.nextLine();
+                        System.out.println("How many would you like to order?: ");
+                        String bevQty = scan.nextLine();
+                        try {
+                            b = Integer.parseInt(bevChoice);
+                            bQty = Integer.parseInt(bevQty);
+                            if (b >= 1 && b <= 4) {
+                                bOrder.setPrice(bevMenuA[b - 1].getPrice());
+                                bOrder.setQuantity(bQty);
+                                bevOrders.add(new BevMenu(bevMenuA[b - 1].getName(), bOrder.getPrice(), bQty));
+                                break;
+                            } else if (b == 5) {
+                                System.exit(0);
+                            } else
+                                System.out.println("Invalid input for beverage choice. Please choose between 1-4.");
+                            validateBev = true;
+                        } catch (NumberFormatException e) {
+                            System.out.println("Please input agn.");
+                            validateBev = true;
+                        }
+                    }
+                } else if (selection.equals("4")) {
+                    break;
+                } else {
+                    System.out.println("Invalid selection, please try again.");
+                    validService = true;
+                }
+
+            }
+            System.out.println();
+            System.out.println("Your transport orders:");
+            for (int i = 0; i < transOrders.size(); i++) {
+                TransMenu transOrder = transOrders.get(i);
+                double transSubTotal = transOrder.order(transOrder.getQuantity(), transOrder.getPrice());
+                System.out.printf("%-4d%-20s %-2d %-1s RM%.2f %n", (i + 1), transOrder.getName(), transOrder.getQuantity(),"x", transSubTotal);
+                subTotal += transSubTotal;
+            }
+            System.out.println();
+            System.out.println("Your food orders:");
+            for (int i = 0; i < foodOrders.size(); i++) {
+                FoodMenu foodOrder = foodOrders.get(i);
+                double foodSubTotal = foodOrder.order(foodOrder.getQuantity(), foodOrder.getPrice());
+                System.out.printf("%-4d%-20s %-2d %-1s RM%.2f %n", (i + 1), foodOrder.getName(), foodOrder.getQuantity(),"x", foodSubTotal);
+                subTotal += foodSubTotal;
+            }
+            System.out.println();
+            System.out.println("Your beverage orders:");
+            for (int i = 0; i < bevOrders.size(); i++) {
+                BevMenu bevOrder = bevOrders.get(i);
+                double bevSubTotal = bevOrder.order(bevOrder.getQuantity(), bevOrder.getPrice());
+                System.out.printf("%-4d%-20s %-2d %-1s RM%.2f %n", (i + 1), bevOrder.getName(), bevOrder.getQuantity(),"x", bevSubTotal);
+                subTotal += bevSubTotal;
+            }
+
+            System.out.println("Thank you for ordering services. \nTotal Amount for services is RM " + String.format("%.2f", subTotal));
+            fd.setServiceSubtotal(subTotal);
+
+        } else if (hotelChoice.equals("Hilton Kuala Lumpur")) {
+            boolean validService = true;
+            while (validService) {
+                displayServiceMenu();
+                System.out.println("Enter your choice: ");
+                String selection = scan.nextLine();
+                if (selection.equals("1")) {
+                    System.out.println("Hilton Kuala Lumpur Hotel Transport Service");
+                    for (int i = 0; i < transMenuB.length; i++) {
+                        System.out.printf("%-4d%-40sRM %.2f%n", i + 1, transMenuB[i].getName(), transMenuB[i].getPrice());
+                    }
+                    boolean validateTrans = true;
+                    while (validateTrans) {
+
+                        int t;
+                        int tQty;
+
+                        System.out.println();
+                        System.out.println("Which transport service you require? : ");
+                        String transChoice = scan.nextLine();
+                        System.out.println("How many transport service you require?: ");
+                        String transQty = scan.nextLine();
+                        try {
+                            t = Integer.parseInt(transChoice);
+                            tQty = Integer.parseInt(transQty);
+                            if (t >= 1 && t <= 4) {
+                                tOrder.setPrice(transMenuB[t - 1].getPrice());
+                                tOrder.setQuantity(tQty);
+                                transOrders.add(new TransMenu(transMenuB[t - 1].getName(), tOrder.getPrice(), tQty));
+                                break;
+                            } else if (t == 5) {
+                                System.exit(0);
+                            } else
+                                System.out.println("Invalid input for transport service. Please choose between 1-4.");
+                            validateTrans = true;
+                        } catch (NumberFormatException e) {
+                            System.out.println("Please input agn.");
+                            validateTrans = true;
+                        }
+
+                    }
+
+                } else if (selection.equals("Hilton Kuala Lumpur")) {
+                    System.out.println("Hilton Kuala Lumpur Hotel Food Service");
+                    for (int i = 0; i < foodMenuB.length; i++) {
+                        System.out.printf("%-4d%-40sRM %.2f%n", i + 1, foodMenuB[i].getName(), foodMenuB[i].getPrice());
+                    }
+                    boolean validateFood = true;
+                    while (validateFood) {
+
+                        int f;
+                        int fQty;
+                        System.out.println();
+                        System.out.println("What would you like to eat? : ");
+                        String foodChoice = scan.nextLine();
+                        System.out.println("How many would you like to order?: ");
+                        String foodQty = scan.nextLine();
+                        try {
+                            f = Integer.parseInt(foodChoice);
+                            fQty = Integer.parseInt(foodQty);
+                            if (f >= 1 && f <= 4) {
+                                fOrder.setPrice(foodMenuB[f - 1].getPrice());
+                                fOrder.setQuantity(fQty);
+                                foodOrders.add(new FoodMenu(foodMenuB[f - 1].getName(), fOrder.getPrice(), fQty));
+                                break;
+                            } else if (f == 5) {
+                                System.exit(0);
+                            } else
+                                System.out.println("Invalid input for food choice. Please choose between 1-4.");
+                            validateFood = true;
+                        } catch (NumberFormatException e) {
+                            System.out.println("Please input agn.");
+                            validateFood = true;
+                        }
+
+                    }
+                } else if (selection.equals("3")) {
+                    System.out.println("Hilton Kuala Lumpur Hotel Beverage Service");
+                    for (int i = 0; i < bevMenuB.length; i++) {
+                        System.out.printf("%-4d%-40sRM %.2f%n", i + 1, bevMenuB[i].getName(), bevMenuB[i].getPrice());
+                    }
+                    boolean validateBev = true;
+                    while (validateBev) {
+                        int b;
+                        int bQty;
+                        System.out.println();
+                        System.out.println("What would you like to drink? : ");
+                        String bevChoice = scan.nextLine();
+                        System.out.println("How many would you like to order?: ");
+                        String bevQty = scan.nextLine();
+                        try {
+                            b = Integer.parseInt(bevChoice);
+                            bQty = Integer.parseInt(bevQty);
+                            if (b >= 1 && b <= 4) {
+                                bOrder.setPrice(bevMenuB[b - 1].getPrice());
+                                bOrder.setQuantity(bQty);
+                                bevOrders.add(new BevMenu(bevMenuB[b - 1].getName(), bOrder.getPrice(), bQty));
+                                break;
+                            } else if (b == 5) {
+                                System.exit(0);
+                            } else
+                                System.out.println("Invalid input for beverage choice. Please choose between 1-4.");
+                            validateBev = true;
+                        } catch (NumberFormatException e) {
+                            System.out.println("Please input agn.");
+                            validateBev = true;
+                        }
+                    }
+                } else if (selection.equals("4")) {
+                    break;
+                } else {
+                    System.out.println("Invalid selection, please try again.");
+                    validService = true;
+                }
+
+            }
+            System.out.println();
+            System.out.println("Your transport orders:");
+            for (int i = 0; i < transOrders.size(); i++) {
+                TransMenu transOrder = transOrders.get(i);
+                double transSubTotal = transOrder.order(transOrder.getQuantity(), transOrder.getPrice());
+                System.out.printf("%-4d%-20s %-2d %-1s RM%.2f %n", (i + 1), transOrder.getName(), transOrder.getQuantity(),"x", transSubTotal);
+                subTotal += transSubTotal;
+            }
+            System.out.println();
+            System.out.println("Your food orders:");
+            for (int i = 0; i < foodOrders.size(); i++) {
+                FoodMenu foodOrder = foodOrders.get(i);
+                double foodSubTotal = foodOrder.order(foodOrder.getQuantity(), foodOrder.getPrice());
+                System.out.printf("%-4d%-20s %-2d %-1s RM%.2f %n", (i + 1), foodOrder.getName(), foodOrder.getQuantity(),"x", foodSubTotal);
+                subTotal += foodSubTotal;
+            }
+            System.out.println();
+            System.out.println("Your beverage orders:");
+            for (int i = 0; i < bevOrders.size(); i++) {
+                BevMenu bevOrder = bevOrders.get(i);
+                double bevSubTotal = bevOrder.order(bevOrder.getQuantity(), bevOrder.getPrice());
+                System.out.printf("%-4d%-20s %-2d %-1s RM%.2f %n", (i + 1), bevOrder.getName(), bevOrder.getQuantity(),"x", bevSubTotal);
+                subTotal += bevSubTotal;
+            }
+
+            System.out.println("Thank you for ordering services. \nTotal Amount for services is RM " + String.format("%.2f", subTotal));
+            fd.setServiceSubtotal(subTotal);
+        } else if (hotelChoice.equals("Hard Rock Kuala Lumpur")) {
+            boolean validService = true;
+            while (validService) {
+                displayServiceMenu();
+                System.out.println("Enter your choice: ");
+                String selection = scan.nextLine();
+                if (selection.equals("1")) {
+                    System.out.println("Hard Rock Kuala Lumpur Hotel Transport Service");
+                    for (int i = 0; i < transMenuC.length; i++) {
+                        System.out.printf("%-4d%-40sRM %.2f%n", i + 1, transMenuC[i].getName(), transMenuC[i].getPrice());
+                    }
+                    boolean validateTrans = true;
+                    while (validateTrans) {
+
+                        int t;
+                        int tQty;
+
+                        System.out.println();
+                        System.out.println("Which transport service you require? : ");
+                        String transChoice = scan.nextLine();
+                        System.out.println("How many transport service you require?: ");
+                        String transQty = scan.nextLine();
+                        try {
+                            t = Integer.parseInt(transChoice);
+                            tQty = Integer.parseInt(transQty);
+                            if (t >= 1 && t <= 4) {
+                                tOrder.setPrice(transMenuC[t - 1].getPrice());
+                                tOrder.setQuantity(tQty);
+                                transOrders.add(new TransMenu(transMenuC[t - 1].getName(), tOrder.getPrice(), tQty));
+                                break;
+                            } else if (t == 5) {
+                                System.exit(0);
+                            } else
+                                System.out.println("Invalid input for transport service. Please choose between 1-4.");
+                            validateTrans = true;
+                        } catch (NumberFormatException e) {
+                            System.out.println("Please input agn.");
+                            validateTrans = true;
+                        }
+
+                    }
+
+                } else if (selection.equals("2")) {
+                    System.out.println("Hard Rock Kuala Lumpur Hotel Food Service");
+                    for (int i = 0; i < foodMenuC.length; i++) {
+                        System.out.printf("%-4d%-40sRM %.2f%n", i + 1, foodMenuC[i].getName(), foodMenuC[i].getPrice());
+                    }
+                    boolean validateFood = true;
+                    while (validateFood) {
+
+                        int f;
+                        int fQty;
+                        System.out.println();
+                        System.out.println("What would you like to eat? : ");
+                        String foodChoice = scan.nextLine();
+                        System.out.println("How many would you like to order?: ");
+                        String foodQty = scan.nextLine();
+                        try {
+                            f = Integer.parseInt(foodChoice);
+                            fQty = Integer.parseInt(foodQty);
+                            if (f >= 1 && f <= 4) {
+                                fOrder.setPrice(foodMenuC[f - 1].getPrice());
+                                fOrder.setQuantity(fQty);
+                                foodOrders.add(new FoodMenu(foodMenuC[f - 1].getName(), fOrder.getPrice(), fQty));
+                                break;
+                            } else if (f == 5) {
+                                System.exit(0);
+                            } else
+                                System.out.println("Invalid input for food choice. Please choose between 1-4.");
+                            validateFood = true;
+                        } catch (NumberFormatException e) {
+                            System.out.println("Please input agn.");
+                            validateFood = true;
+                        }
+
+                    }
+                } else if (selection.equals("3")) {
+                    System.out.println("Hard Rock Kuala Lumpur Hotel Beverage Service");
+                    for (int i = 0; i < bevMenuC.length; i++) {
+                        System.out.printf("%-4d%-40sRM %.2f%n", i + 1, bevMenuC[i].getName(), bevMenuC[i].getPrice());
+                    }
+                    boolean validateBev = true;
+                    while (validateBev) {
+                        int b;
+                        int bQty;
+                        System.out.println();
+                        System.out.println("What would you like to drink? : ");
+                        String bevChoice = scan.nextLine();
+                        System.out.println("How many would you like to order?: ");
+                        String bevQty = scan.nextLine();
+                        try {
+                            b = Integer.parseInt(bevChoice);
+                            bQty = Integer.parseInt(bevQty);
+                            if (b >= 1 && b <= 4) {
+                                bOrder.setPrice(bevMenuC[b - 1].getPrice());
+                                bOrder.setQuantity(bQty);
+                                bevOrders.add(new BevMenu(bevMenuC[b - 1].getName(), bOrder.getPrice(), bQty));
+                                break;
+                            } else if (b == 5) {
+                                System.exit(0);
+                            } else
+                                System.out.println("Invalid input for beverage choice. Please choose between 1-4.");
+                            validateBev = true;
+                        } catch (NumberFormatException e) {
+                            System.out.println("Please input agn.");
+                            validateBev = true;
+                        }
+                    }
+                } else if (selection.equals("4")) {
+                    break;
+                } else {
+                    System.out.println("Invalid selection, please try again.");
+                    validService = true;
+                }
+
+            }
+            System.out.println();
+            System.out.println("Your transport orders:");
+            for (int i = 0; i < transOrders.size(); i++) {
+                TransMenu transOrder = transOrders.get(i);
+                double transSubTotal = transOrder.order(transOrder.getQuantity(), transOrder.getPrice());
+                System.out.printf("%-4d%-20s %-2d %-1s RM%.2f %n", (i + 1), transOrder.getName(), transOrder.getQuantity(),"x", transSubTotal);
+                subTotal += transSubTotal;
+            }
+            System.out.println();
+            System.out.println("Your food orders:");
+            for (int i = 0; i < foodOrders.size(); i++) {
+                FoodMenu foodOrder = foodOrders.get(i);
+                double foodSubTotal = foodOrder.order(foodOrder.getQuantity(), foodOrder.getPrice());
+                System.out.printf("%-4d%-20s %-2d %-1s RM%.2f %n", (i + 1), foodOrder.getName(), foodOrder.getQuantity(),"x", foodSubTotal);
+                subTotal += foodSubTotal;
+            }
+            System.out.println();
+            System.out.println("Your beverage orders:");
+            for (int i = 0; i < bevOrders.size(); i++) {
+                BevMenu bevOrder = bevOrders.get(i);
+                double bevSubTotal = bevOrder.order(bevOrder.getQuantity(), bevOrder.getPrice());
+                System.out.printf("%-4d%-20s %-2d %-1s RM%.2f %n", (i + 1), bevOrder.getName(), bevOrder.getQuantity(),"x", bevSubTotal);
+                subTotal += bevSubTotal;
+            }
+
+            System.out.println("Thank you for ordering services. \nTotal Amount for services is RM " + String.format("%.2f", subTotal));
+            fd.setServiceSubtotal(subTotal);
+        } else if (hotelChoice.equals("Sepang Resort")) {
+            boolean validService = true;
+            while (validService) {
+                displayServiceMenu();
+                System.out.println("Enter your choice: ");
+                String selection = scan.nextLine();
+                if (selection.equals("1")) {
+                    System.out.println("Sepang Resort Hotel Transport Service");
+                    for (int i =0; i < transMenuD.length;i ++){
+                        System.out.printf("%-4d%-40sRM %.2f%n",i+1 ,   transMenuD[i].getName() ,  transMenuD[i].getPrice());
+                    }
+                    boolean validateTrans = true;
+                    while (validateTrans) {
+                        int t;
+                        int tQty;
+
+                        System.out.println();
+                        System.out.println("Which transport service you require? : ");
+                        String transChoice = scan.nextLine();
+                        System.out.println("How many transport service you require?: ");
+                        String transQty = scan.nextLine();
+                        try {
+                            t = Integer.parseInt(transChoice);
+                            tQty = Integer.parseInt(transQty);
+                            if (t >= 1 && t <= 4) {
+                                tOrder.setPrice(transMenuD[t - 1].getPrice());
+                                tOrder.setQuantity(tQty);
+                                transOrders.add(new TransMenu(transMenuD[t - 1].getName(), tOrder.getPrice(), tQty));
+                                break;
+                            } else if (t == 5) {
+                                System.exit(0);
+                            } else
+                                System.out.println("Invalid input for transport service. Please choose between 1-4.");
+                            validateTrans = true;
+                        } catch (NumberFormatException e) {
+                            System.out.println("Please input agn.");
+                            validateTrans = true;
+                        }
+
+                    }
+
+                } else if (selection.equals("2")) {
+                    System.out.println("Sepang Resort Hotel Food Service");
+                    for (int i =0; i < foodMenuD.length;i ++){
+                        System.out.printf("%-4d%-40sRM %.2f%n",i+1 ,   foodMenuD[i].getName() ,  foodMenuD[i].getPrice());
+                    }
+                    boolean validateFood = true;
+                    while (validateFood) {
+
+                        int f;
+                        int fQty;
+                        System.out.println();
+                        System.out.println("What would you like to eat? : ");
+                        String foodChoice = scan.nextLine();
+                        System.out.println("How many would you like to order?: ");
+                        String foodQty = scan.nextLine();
+                        try {
+                            f = Integer.parseInt(foodChoice);
+                            fQty = Integer.parseInt(foodQty);
+                            if (f >= 1 && f <= 4) {
+                                fOrder.setPrice(foodMenuD[f - 1].getPrice());
+                                fOrder.setQuantity(fQty);
+                                foodOrders.add(new FoodMenu(foodMenuD[f - 1].getName(), fOrder.getPrice(), fQty));
+                                break;
+                            } else if (f == 5) {
+                                System.exit(0);
+                            } else
+                                System.out.println("Invalid input for food choice. Please choose between 1-4.");
+                            validateFood = true;
+                        } catch (NumberFormatException e) {
+                            System.out.println("Please input agn.");
+                            validateFood = true;
+                        }
+
+                    }
+                } else if (selection.equals("3")) {
+                    System.out.println("Sepang Resort Hotel Beverage Service");
+                    for (int i =0; i < bevMenuD.length;i ++){
+                        System.out.printf("%-4d%-40sRM %.2f%n",i+1 ,   bevMenuD[i].getName() ,  bevMenuD[i].getPrice());
+                    }
+                    boolean validateBev = true;
+                    while (validateBev) {
+                        int b;
+                        int bQty;
+                        System.out.println();
+                        System.out.println("What would you like to drink? : ");
+                        String bevChoice = scan.nextLine();
+                        System.out.println("How many would you like to order?: ");
+                        String bevQty = scan.nextLine();
+                        try {
+                            b = Integer.parseInt(bevChoice);
+                            bQty = Integer.parseInt(bevQty);
+                            if (b >= 1 && b <= 4) {
+                                bOrder.setPrice(bevMenuD[b - 1].getPrice());
+                                bOrder.setQuantity(bQty);
+                                bevOrders.add(new BevMenu(bevMenuD[b - 1].getName(), bOrder.getPrice(), bQty));
+                                break;
+                            } else if (b == 5) {
+                                System.exit(0);
+                            } else
+                                System.out.println("Invalid input for beverage choice. Please choose between 1-4.");
+                            validateBev = true;
+                        } catch (NumberFormatException e) {
+                            System.out.println("Please input agn.");
+                            validateBev = true;
+                        }
+                    }
+                } else if (selection.equals("4")) {
+                    break;
+                } else {
+                    System.out.println("Invalid selection, please try again.");
+                    validService = true;
+                }
+
+            }
+            System.out.println();
+            System.out.println("Your transport orders:");
+            for (int i = 0; i < transOrders.size(); i++) {
+                TransMenu transOrder = transOrders.get(i);
+                double transSubTotal = transOrder.order(transOrder.getQuantity(), transOrder.getPrice());
+                System.out.printf("%-4d%-20s %-2d %-1s RM%.2f %n", (i + 1), transOrder.getName(), transOrder.getQuantity(),"x", transSubTotal);
+                subTotal += transSubTotal;
+            }
+            System.out.println();
+            System.out.println("Your food orders:");
+            for (int i = 0; i < foodOrders.size(); i++) {
+                FoodMenu foodOrder = foodOrders.get(i);
+                double foodSubTotal = foodOrder.order(foodOrder.getQuantity(), foodOrder.getPrice());
+                System.out.printf("%-4d%-20s %-2d %-1s RM%.2f %n", (i + 1), foodOrder.getName(), foodOrder.getQuantity(),"x", foodSubTotal);
+                subTotal += foodSubTotal;
+            }
+            System.out.println();
+            System.out.println("Your beverage orders:");
+            for (int i = 0; i < bevOrders.size(); i++) {
+                BevMenu bevOrder = bevOrders.get(i);
+                double bevSubTotal = bevOrder.order(bevOrder.getQuantity(), bevOrder.getPrice());
+                System.out.printf("%-4d%-20s %-2d %-1s RM%.2f %n", (i + 1), bevOrder.getName(), bevOrder.getQuantity(),"x", bevSubTotal);
+                subTotal += bevSubTotal;
+            }
+
+            System.out.println("Thank you for ordering services. \nTotal Amount for services is RM " + String.format("%.2f",subTotal));
+            fd.setServiceSubtotal(subTotal);
+
+
+        } else if (hotelChoice.equals("Le Meridien Kuala Lumpur")) {
+            boolean validService = true;
+            while (validService) {
+                displayServiceMenu();
+                System.out.println("Enter your choice: ");
+                String selection = scan.nextLine();
+                if (selection.equals("1")) {
+                    System.out.println("Le Meridien Kuala Lumpur Transport Service");
+                    for (int i =0; i < transMenuE.length;i ++){
+                        System.out.printf("%-4d%-40sRM %.2f%n",i+1 ,   transMenuE[i].getName() ,  transMenuE[i].getPrice());
+                    }
+                    boolean validateTrans = true;
+                    while (validateTrans) {
+
+                        int t;
+                        int tQty;
+
+                        System.out.println();
+                        System.out.println("Which transport service you require? : ");
+                        String transChoice = scan.nextLine();
+                        System.out.println("How many transport service you require?: ");
+                        String transQty = scan.nextLine();
+                        try {
+                            t = Integer.parseInt(transChoice);
+                            tQty = Integer.parseInt(transQty);
+                            if (t >= 1 && t <= 4) {
+                                tOrder.setPrice(transMenuE[t - 1].getPrice());
+                                tOrder.setQuantity(tQty);
+                                transOrders.add(new TransMenu(transMenuE[t - 1].getName(), tOrder.getPrice(), tQty));
+                                break;
+                            } else if (t == 5) {
+                                System.exit(0);
+                            } else
+                                System.out.println("Invalid input for transport service. Please choose between 1-4.");
+                            validateTrans = true;
+                        } catch (NumberFormatException e) {
+                            System.out.println("Please input agn.");
+                            validateTrans = true;
+                        }
+
+                    }
+
+                } else if (selection.equals("2")) {
+                    System.out.println("Le Meridien Kuala Lumpur Hotel Food Service");
+                    for (int i =0; i < foodMenuE.length;i ++){
+                        System.out.printf("%-4d%-40sRM %.2f%n",i+1 ,   foodMenuE[i].getName() ,  foodMenuE[i].getPrice());
+                    }
+                    boolean validateFood = true;
+                    while (validateFood) {
+
+                        int f;
+                        int fQty;
+                        System.out.println();
+                        System.out.println("What would you like to eat? : ");
+                        String foodChoice = scan.nextLine();
+                        System.out.println("How many would you like to order?: ");
+                        String foodQty = scan.nextLine();
+                        try {
+                            f = Integer.parseInt(foodChoice);
+                            fQty = Integer.parseInt(foodQty);
+                            if (f >= 1 && f <= 4) {
+                                fOrder.setPrice(foodMenuE[f - 1].getPrice());
+                                fOrder.setQuantity(fQty);
+                                foodOrders.add(new FoodMenu(foodMenuE[f - 1].getName(), fOrder.getPrice(), fQty));
+                                break;
+                            } else if (f == 5) {
+                                System.exit(0);
+                            } else
+                                System.out.println("Invalid input for food choice. Please choose between 1-4.");
+                            validateFood = true;
+                        } catch (NumberFormatException e) {
+                            System.out.println("Please input agn.");
+                            validateFood = true;
+                        }
+
+                    }
+                } else if (selection.equals("3")) {
+                    System.out.println("Le Meridien Kuala Lumpur Hotel Beverage Service");
+                    for (int i =0; i < bevMenuE.length;i ++){
+                        System.out.printf("%-4d%-40sRM %.2f%n",i+1 ,   bevMenuE[i].getName() ,  bevMenuE[i].getPrice());
+                    }
+                    boolean validateBev = true;
+                    while (validateBev) {
+                        int b;
+                        int bQty;
+                        System.out.println();
+                        System.out.println("What would you like to drink? : ");
+                        String bevChoice = scan.nextLine();
+                        System.out.println("How many would you like to order?: ");
+                        String bevQty = scan.nextLine();
+                        try {
+                            b = Integer.parseInt(bevChoice);
+                            bQty = Integer.parseInt(bevQty);
+                            if (b >= 1 && b <= 4) {
+                                bOrder.setPrice(bevMenuE[b - 1].getPrice());
+                                bOrder.setQuantity(bQty);
+                                bevOrders.add(new BevMenu(bevMenuE[b - 1].getName(), bOrder.getPrice(), bQty));
+                                break;
+                            } else if (b == 5) {
+                                System.exit(0);
+                            } else
+                                System.out.println("Invalid input for beverage choice. Please choose between 1-4.");
+                            validateBev = true;
+                        } catch (NumberFormatException e) {
+                            System.out.println("Please input agn.");
+                            validateBev = true;
+                        }
+                    }
+                } else if (selection.equals("4")) {
+                    break;
+                } else {
+                    System.out.println("Invalid selection, please try again.");
+                    validService = true;
+                }
+
+            }
+            System.out.println();
+            System.out.println("Your transport orders:");
+            for (int i = 0; i < transOrders.size(); i++) {
+                TransMenu transOrder = transOrders.get(i);
+                double transSubTotal = transOrder.order(transOrder.getQuantity(), transOrder.getPrice());
+                System.out.printf("%-4d%-20s %-2d %-1s RM%.2f %n", (i + 1), transOrder.getName(), transOrder.getQuantity(),"x", transSubTotal);
+                subTotal += transSubTotal;
+            }
+            System.out.println();
+            System.out.println("Your food orders:");
+            for (int i = 0; i < foodOrders.size(); i++) {
+                FoodMenu foodOrder = foodOrders.get(i);
+                double foodSubTotal = foodOrder.order(foodOrder.getQuantity(), foodOrder.getPrice());
+                System.out.printf("%-4d%-20s %-2d %-1s RM%.2f %n", (i + 1), foodOrder.getName(), foodOrder.getQuantity(),"x", foodSubTotal);
+                subTotal += foodSubTotal;
+            }
+            System.out.println();
+            System.out.println("Your beverage orders:");
+            for (int i = 0; i < bevOrders.size(); i++) {
+                BevMenu bevOrder = bevOrders.get(i);
+                double bevSubTotal = bevOrder.order(bevOrder.getQuantity(), bevOrder.getPrice());
+                System.out.printf("%-4d%-20s %-2d %-1s RM%.2f %n", (i + 1), bevOrder.getName(), bevOrder.getQuantity(),"x", bevSubTotal);
+                subTotal += bevSubTotal;
+            }
+
+            System.out.println("Thank you for ordering services. \nTotal Amount for services is RM " + String.format("%.2f",subTotal));
+            fd.setServiceSubtotal(subTotal);
+
+        } else {
+            System.out.println("Invalid input");
         }
+
+    }
+    public static void displayServiceMenu(){
+        System.out.println();
+        System.out.printf("%78s","*************** Services Menu ***************\n");
+        System.out.printf("%78s","=====================================================\n");
+        System.out.printf("%79s","                  1.Transport Menu                   \n");
+        System.out.printf("%79s","                  2.Foods Menu                       \n");
+        System.out.printf("%79s","                  3.Beverage Menu                    \n");
+        System.out.printf("%79s","                     4.Exit                           \n");
+        System.out.printf("%78s","======================================================\n");
+        System.out.printf("%70s","      PLEASE SELECT THE MENU CATEGORY         \n");
     }
 }
-
