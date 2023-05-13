@@ -1,11 +1,12 @@
 import java.sql.*;
-import java.util.Scanner;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+import java.util.*;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.util.concurrent.ThreadLocalRandom;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
+
 import Service.*;
 
 
@@ -227,8 +228,9 @@ public class Main {
         do {
             System.out.println("\nWelcome to our Hotel Booking System");
             System.out.println("1. Search for Hotels");
-            System.out.println("2. Payment");
-            System.out.println("3. Exit");
+            System.out.println("2. Reservation");
+            System.out.println("3. Top Up");
+            System.out.println("4. Exit");
 
             System.out.print("Enter your choice: ");
             choice = scanner.nextInt();
@@ -452,26 +454,50 @@ public class Main {
                                 System.out.println("Invalid choice.");
                                 break;
                         }}
-                        while (choice1 != 5) ;
-                        break;
+                    while (choice1 != 5) ;
+                    break;
 
 
                 case 2:
-                    //Payment part
-                    Scanner scanner1 = new Scanner(System.in);
-                    double subtotal = 0.0;
-                    double userPay = 0.0;
-                    double balance = 0.0;
-                    Main m = new Main();
 
-                    printPaymentArt();
-                    subtotal = m.generateRandom();
+                    System.out.println("================================");
+                    System.out.println("|     1. Make Reservation      |");
+                    System.out.println("|     2. Modify Reservation    |");
+                    System.out.println("|     3. Cancel Reservation    |");
+                    System.out.println("|     4. Exit                  |");
+                    System.out.println("================================\n");
+                    System.out.print("Select your option : ");
+                    int resinput = scanner.nextInt();
 
-                    String method = m.paymentMethods(subtotal);
+                    switch (resinput){
+                        case 1:
+                            MakeReservationProcess(hotels, rooms);
+                        case 2:
+                            break;
 
-                    System.out.printf("Thank you for visiting! \nPayment method: " + method + "\nPlease pay:RM %.2f\n", subtotal);
-
-                    balance = m.getPayment(subtotal);
+                        case 3:
+                            break;
+                        case 4:
+                            break;
+                        default:
+                            System.out.println("Invalid Input");
+                            break;
+                    }
+//                    //Payment part
+//                    Scanner scanner1 = new Scanner(System.in);
+//                    double subtotal = 0.0;
+//                    double userPay = 0.0;
+//                    double balance = 0.0;
+//                    Main m = new Main();
+//
+//                    printPaymentArt();
+//                    subtotal = m.generateRandom();
+//
+//                    String method = m.paymentMethods(subtotal);
+//
+//                    System.out.printf("Thank you for visiting! \nPayment method: " + method + "\nPlease pay:RM %.2f\n", subtotal);
+//
+//                    balance = m.getPayment(subtotal);
 
                 case 3:
                     System.out.println("Thank you for using Hotel Booking System.");
@@ -484,9 +510,189 @@ public class Main {
 
         } while (choice != 3);
 
+
     }
 
+    static void MakeReservationProcess(ArrayList<Hotel> hotels ,
+                                       ArrayList<Room> rooms ) {
+        boolean validpax = true;
+        boolean validdate = true;
+        boolean validroom = true;
+        int pax = 0;
+        Customer customer = new Customer();
+        Reservation reservation = new Reservation();
+        Scanner input = new Scanner(System.in);
 
+        ArrayList<RoomDisplay> roomDisplay = new ArrayList<>();
+
+        //-------------------------------------Make reservation---------------------------------------------
+        //Display header and hotels
+
+        reservation.ReservationHeader();
+
+        System.out.println("===============List of Hotels==============");
+        int i = 1;
+        for (Hotel hotel : hotels) {
+            System.out.println(i + ". " + hotel.getHotelName());
+            i++;
+        }
+        System.out.println("============================================");
+
+        int choosehotel = 0;
+        while (choosehotel < 1 || choosehotel > 5) {
+            System.out.print("Select Hotel to Make Reservation : ");
+            try {
+                choosehotel = input.nextInt();
+                if (choosehotel < 1 || choosehotel > 5) {
+                    System.out.println("Invalid input. Please enter a number between 1 and 5.");
+                }
+            } catch (InputMismatchException e) { //Catch exception if user input is not int
+                System.out.println("Invalid input. Please enter a number between 1 and 5.");
+                input.next();
+            }
+        }
+
+        Hotel selectedHotel = hotels.get(choosehotel - 1);
+        reservation.setHotel(selectedHotel);
+
+        Hotel bookedHotel = reservation.getHotel();
+        System.out.println("\n************************************************************");
+        System.out.println("You are making reservation for : " + bookedHotel.getHotelName());
+        System.out.println("************************************************************");
+
+        //Get number of pax
+
+        do {
+            System.out.print("Enter number of pax : ");
+            pax = input.nextInt();
+
+            if (pax <= 0) {
+                validpax = false;
+                System.out.println("Please Enter Valid Number Of Pax");
+
+            } else if (pax > 6) {
+                validpax = false;
+                System.out.println("\nNo Suitable Room For More Than 6 Pax\nPlease Try Again\n");
+            } else {
+                reservation.setPax(pax);
+                validpax = true;
+            }
+
+        } while (validpax == false);
+
+        //Get check in check out date
+
+        System.out.println("\n=================Date=================");
+        input.nextLine();
+
+        do {
+            LocalDate minDate = LocalDate.of(2023, 6, 1);
+            LocalDate maxDate = LocalDate.of(2023, 6, 7);
+
+            try {
+                System.out.print("Enter Check In Date (yyyy-mm-dd): ");
+                String checkInDateString = input.nextLine();
+
+                LocalDate Indate = LocalDate.parse(checkInDateString, DateTimeFormatter.ISO_DATE);
+
+                if (Indate.isBefore(minDate) || Indate.isAfter(maxDate)) {
+                    throw new IllegalArgumentException("Invalid date range. Please enter a date between " + minDate + " and " + maxDate);
+                }
+
+                System.out.print("Enter Check Out Date (yyyy-mm-dd): ");
+                String checkOutDateString = input.nextLine();
+
+                LocalDate Outdate = LocalDate.parse(checkOutDateString, DateTimeFormatter.ISO_DATE);
+
+                if (Outdate.isBefore(minDate) || Outdate.isAfter(maxDate)) {
+                    throw new IllegalArgumentException("Invalid date range. Please enter a date between " + minDate + " and " + maxDate);
+                }
+
+                reservation.setCheckindate(Indate);
+                reservation.setCheckoutdate(Outdate);
+
+                validdate = true;
+
+                if (Outdate.isBefore(Indate)) { // check if check-out date is before check-in date
+                    validdate = false;
+                    throw new IllegalArgumentException("Check-out date must be after check-in date");
+                }
+
+            } catch (DateTimeParseException e) {
+                validdate = false;
+                System.out.println("\nInvalid Date\nPlease Try Again\n");
+            } catch (IllegalArgumentException e) {
+                validdate = false;
+                System.out.println("\n" + e.getMessage() + "\nPlease Try Again\n");
+            }
+
+        } while (validdate == false);
+
+        int j = 1;
+
+        System.out.println("\n------------------Available Room Type------------------");
+        System.out.println("*******************************************************");
+        for (Room room : selectedHotel.getRooms()) {
+            if (room.getMaxPax() >= reservation.getPax()) {
+                String roomType = room.getRoomType(); //get the room type from the room object
+                System.out.println(j + ". " + roomType + " (Max Pax: " + room.getMaxPax() + ") - RM " + room.getPrice());
+
+                roomDisplay.add(new RoomDisplay(j, roomType));
+
+                j++;
+            }
+        }
+
+        System.out.println("*******************************************************");
+
+        do {
+            try {
+                System.out.print("Select Room Type : ");
+                int inputRoom = input.nextInt();
+
+                Room selectedRoom = null;
+                for (RoomDisplay rd : roomDisplay) {
+                    // check if input matches the displayId
+                    if (inputRoom == rd.getRoomNum()) {
+                        // print roomType associated with matched RoomDisplay object
+                        System.out.println("\nYou have selected: " + rd.getRoomType());
+                        validroom = true;
+
+                        // find the corresponding Room object based on the selected room type
+                        selectedRoom = selectedHotel.getRooms().stream()
+                                .filter(room -> room.getRoomType().equals(rd.getRoomType()))
+                                .findFirst()
+                                .orElse(null);
+
+                        reservation.setRoom(selectedRoom);
+                        break; // exit loop since we found a match
+                    }
+                }
+
+                if (selectedRoom == null) {
+                    System.out.println("Please Enter a Valid Room Number");
+                    validroom = false;
+                }
+
+            } catch (InputMismatchException e) {
+                System.out.println("\nInvalid Input\nPlease Try Again\n");
+                input.nextLine(); // consume the invalid input
+                validroom = false;
+            }
+        } while (validroom == false);
+
+        //Store data to customer class
+        customer.addReservation(reservation);
+
+        //Display Reservation Summary
+
+        System.out.println("\n         *****************************");
+        System.out.println("         |   Thank You For Booking   |");
+        System.out.println("         *****************************");
+        String custResSum = customer.toString();
+        System.out.println(custResSum);
+
+    }
 
 
     public static void welcomeScreen() {
