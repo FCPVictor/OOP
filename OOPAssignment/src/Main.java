@@ -1,8 +1,10 @@
+
 import java.sql.*;
 import java.util.Scanner;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.util.concurrent.ThreadLocalRandom;
+import Service.*;
 
 public class Main {
 
@@ -177,7 +179,7 @@ public class Main {
 
         //Payment part
         Scanner scanner1 = new Scanner(System.in);
-        double subtotal = 0.0;
+        double subtotal = 0.0; //*need change*
         double userPay = 0.0;
         double balance = 0.0;
         Main m = new Main();

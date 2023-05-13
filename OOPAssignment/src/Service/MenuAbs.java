@@ -1,3 +1,4 @@
+package Service;
 public abstract class MenuAbs implements MenuInterface{
     private String name;
     private double price;

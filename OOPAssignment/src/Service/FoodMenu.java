@@ -1,3 +1,4 @@
+package Service;
 public class FoodMenu extends MenuAbs {
     private int quantity;
     public FoodMenu(){

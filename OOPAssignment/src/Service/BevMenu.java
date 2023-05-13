@@ -1,3 +1,4 @@
+package Service;
 public class BevMenu extends MenuAbs {
     private int quantity;
     public BevMenu(){

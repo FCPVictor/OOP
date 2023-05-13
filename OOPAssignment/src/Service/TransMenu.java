@@ -1,3 +1,4 @@
+package Service;
 public class TransMenu extends MenuAbs {
     private int quantity;
     public TransMenu(){
