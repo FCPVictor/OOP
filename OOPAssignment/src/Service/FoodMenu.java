@@ -1,8 +1,17 @@
 package Service;
 public class FoodMenu extends MenuAbs {
     private int quantity;
+    private double serviceSubtotal;
     public FoodMenu(){
 
+    }
+
+    public double getServiceSubtotal() {
+        return serviceSubtotal;
+    }
+
+    public void setServiceSubtotal(double serviceSubtotal) {
+        this.serviceSubtotal = serviceSubtotal;
     }
 
     public FoodMenu(String name, double price){

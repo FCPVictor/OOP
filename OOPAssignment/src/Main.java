@@ -45,7 +45,7 @@ public class Main {
      *
      * */
 
-
+    static FoodMenu fd = new FoodMenu();
 
 
 
@@ -206,7 +206,8 @@ public class Main {
             System.out.println("1. Search for Hotels");
             System.out.println("2. Reservation");
             System.out.println("3. Top Up");
-            System.out.println("4. Exit");
+            System.out.println("4. Payment");
+            System.out.println("5. Exit");
 
             System.out.print("Enter your choice: ");
             choice = scanner.nextInt();
@@ -459,6 +460,14 @@ public class Main {
                             System.out.println("Invalid Input");
                             break;
                     }
+
+
+                    //Choice
+                case 3:
+                    System.out.println("Thank you for using Hotel Booking System.");
+                    break;
+
+                case 4:
                     //Payment part
                     Scanner scanner1 = new Scanner(System.in);
                     double subtotal = 0.0;
@@ -466,17 +475,20 @@ public class Main {
                     double balance = 0.0;
                     Main m = new Main();
 
-                    print.printPaymentArt();
-                    subtotal = m.generateRandom();
 
+                    print.printPaymentArt();
+                    subtotal = fd.getServiceSubtotal();
+                    System.out.printf("Amount to pay: RM %.2f\n", subtotal);
                     String method = m.paymentMethods(subtotal);
 
                     System.out.printf("Thank you for visiting! \nPayment method: " + method + "\nPlease pay:RM %.2f\n", subtotal);
 
                     balance = m.getPayment(subtotal);
+                    break;
 
-                case 3:
-                    System.out.println("Thank you for using Hotel Booking System.");
+                case 5:
+                    //Exit
+                    System.out.println("Thank you!!");
                     break;
 
                 default:
@@ -484,7 +496,7 @@ public class Main {
                     break;
             }
 
-        } while (choice != 3);
+        } while (choice != 5);
 
 
     }
@@ -953,6 +965,7 @@ public class Main {
             }
 
             System.out.println("Thank you for ordering services. \nTotal Amount for services is RM " + String.format("%.2f", subTotal));
+            fd.setServiceSubtotal(subTotal);
 
         } else if (hotelChoice.equals("Hilton Kuala Lumpur")) {
             boolean validService = true;
@@ -1096,6 +1109,7 @@ public class Main {
             }
 
             System.out.println("Thank you for ordering services. \nTotal Amount for services is RM " + String.format("%.2f", subTotal));
+            fd.setServiceSubtotal(subTotal);
         } else if (hotelChoice.equals("Hard Rock Kuala Lumpur")) {
             boolean validService = true;
             while (validService) {
@@ -1238,6 +1252,7 @@ public class Main {
             }
 
             System.out.println("Thank you for ordering services. \nTotal Amount for services is RM " + String.format("%.2f", subTotal));
+            fd.setServiceSubtotal(subTotal);
         } else if (hotelChoice.equals("Sepang Resort")) {
             boolean validService = true;
             while (validService) {
@@ -1379,6 +1394,7 @@ public class Main {
             }
 
             System.out.println("Thank you for ordering services. \nTotal Amount for services is RM " + String.format("%.2f",subTotal));
+            fd.setServiceSubtotal(subTotal);
 
 
         } else if (hotelChoice.equals("Le Meridien Kuala Lumpur")) {
@@ -1523,6 +1539,7 @@ public class Main {
             }
 
             System.out.println("Thank you for ordering services. \nTotal Amount for services is RM " + String.format("%.2f",subTotal));
+            fd.setServiceSubtotal(subTotal);
 
         } else {
             System.out.println("Invalid input");
