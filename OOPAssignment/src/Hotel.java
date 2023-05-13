@@ -90,12 +90,12 @@ class Hotel {
         System.out.println("***                                                    ***");
         System.out.println("**********************************************************");
         System.out.println();
-        
+
         System.out.println("-------------------------------------------------------------------------");
-        
+
         System.out.printf("%-40s%-10s%-20s%n", "Hotel Name", "Price(RM)", "Cheapest Room Type");
 
-        System.out.println("-------------------------------------------------------------------------");        
+        System.out.println("-------------------------------------------------------------------------");
     }
 
     public static void printHeader(int option) {

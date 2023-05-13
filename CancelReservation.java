@@ -31,21 +31,16 @@ public class CancelReservation {
         Scanner scanner = new Scanner(System.in);
 
         while (true) {
-            System.out.print("   _____          _   _  _____ ______ _            _______ _____ ____  _   _ \n"
-                    + "  / ____|   /\\   | \\ | |/ ____|  ____| |        /\\|__   __|_   _/ __ \\| \\ | |\n"
-                    + " | |       /  \\  |  \\| | |    | |__  | |       /  \\  | |    | || |  | |  \\| |\n"
-                    + " | |      / /\\ \\ | . ` | |    |  __| | |      / /\\ \\ | |    | || |  | | . ` |\n"
-                    + " | |____ / ____ \\| |\\  | |____| |____| |____ / ____ \\| |   _| || |__| | |\\  |\n"
-                    + "  \\_____/_/    \\_\\_| \\_|\\_____|______|______/_/    \\_\\_|  |_____\\____/|_| \\_|\n");
-            System.out.print("-----------------------------------------------------------------------------------\n");
-            System.out.print("Enter CustomerID: ");
+
+            printMenu();
+            System.out.print("                          Enter CustomerID: ");
             String custId = scanner.next();
 
             Reservation[] customerReservations = findReservationsByCustomerId(custId);
             if (customerReservations.length == 0) {
-                System.out.println("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
-                System.out.println("Invalid CustomerID. No reservations found.");
-                System.out.println("Please try again.");
+                System.out.println("                                XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
+                System.out.println("                                Invalid CustomerID. No reservations found.");
+                System.out.println("                                Please try again.");
                 continue;
             }
 
@@ -71,22 +66,26 @@ public class CancelReservation {
             String confirmation = scanner.next();
 
             if (confirmation.equalsIgnoreCase("Y")) {
-                for (int i = 0; i < numReservations; i++) {
-                    if (reservations[i] == selectedReservation) {
-                        for (int j = i + 1; j < numReservations; j++) {
-                            reservations[j - 1] = reservations[j];
-                        }
-                        reservations[numReservations - 1] = null;
-                        numReservations--;
-                        System.out.println("Reservation canceled successfully.");
-                        break;
-                    }
-                }
+                cancelSelectedReservation(selectedReservation);
+                System.out.println("Reservation canceled successfully.\n");
             } else {
-                System.out.println("Reservation cancellation aborted.");
+                System.out.println("Reservation cancellation aborted.\n");
             }
 
             break;
+        }
+    }
+
+    private void cancelSelectedReservation(Reservation reservation) {
+        for (int i = 0; i < numReservations; i++) {
+            if (reservations[i] == reservation) {
+                for (int j = i + 1; j < numReservations; j++) {
+                    reservations[j - 1] = reservations[j];
+                }
+                reservations[numReservations - 1] = null;
+                numReservations--;
+                break;
+            }
         }
     }
 
@@ -103,6 +102,16 @@ public class CancelReservation {
         Reservation[] result = new Reservation[count];
         System.arraycopy(customerReservations, 0, result, 0, count);
         return result;
+    }
+
+    private void printMenu() {
+        System.out.println("  _____          _   _  _____ ______ _            _______ _____ ____  _   _");
+        System.out.println(" / ____|   /\\   | \\ | |/ ____|  ____| |        /\\|__   __|_   _/ __ \\| \\ | |");
+        System.out.println("| |       /  \\  |  \\| | |    | |__  | |       /  \\  | |    | || |  | |  \\| |");
+        System.out.println("| |      / /\\ \\ | . ` | |    |  __| | |      / /\\ \\ | |    | || |  | | . ` |");
+        System.out.println("| |____ / ____ \\| |\\  | |____| |____| |____ / ____ \\| |   _| || |__| | |\\  |");
+        System.out.println(" \\_____/_/    \\_\\_| \\_|\\_____|______|______/_/    \\_\\_|  |_____\\____/|_| \\_|\n");
+        System.out.println("-----------------------------------------------------------------------------------");
     }
 
 }
