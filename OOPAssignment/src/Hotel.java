@@ -81,7 +81,10 @@ class Hotel {
         return rooms;
     }
 
-
+    @Override
+    public String toString() {
+        return  hotelName;
+    }
     public static void displaycompare() {
         System.out.println();
         System.out.println("**********************************************************");
