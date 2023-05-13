@@ -120,6 +120,7 @@ public class Reservation {
                 "Room Type      : " + room.getRoomType() + "\n" +
                 "Check-in Date  : " + checkindate.toString() + "\n" +
                 "Check-out Date : " + checkoutdate.toString() + "\n" +
-                "Pax            : " + getPax() + "\n";
+                "Pax            : " + getPax() + "\n" +
+                "Room Price     : " + getTotalPrice();
     }
 }

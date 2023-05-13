@@ -42,7 +42,7 @@ class CashPayment extends Payment{
     }
 
     public void processPayment(){
-        System.out.println("Processing cash payment of $" + amount);
+        System.out.println("Processing cash payment of RM" + amount);
     }
 
     @Override
@@ -81,7 +81,7 @@ class CreditCardPayment extends Payment{
         expirationDate = scanner.next();
         System.out.print("Enter the security code: ");
         securityCode = scanner.next();
-        System.out.println("Processing credit card payment of $" + amount);
+        System.out.println("Processing credit card payment of RM" + amount);
         System.out.println("Card number: "+ cardNumber);
         System.out.println("Security code: "+ securityCode);
     }
