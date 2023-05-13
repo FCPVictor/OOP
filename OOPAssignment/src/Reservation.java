@@ -1,6 +1,6 @@
 import java.time.LocalDate;
 
-public class Reservation implements RoomPriceCal{
+public class Reservation {
     private Customer customer;
     private int resId;
     private static int nextResId = 1010;
@@ -148,7 +148,6 @@ public class Reservation implements RoomPriceCal{
                 "---------------------------------------------\n";
     }
 
-    @Override
     public double calTotalRoomPrice(double roomPrice, long numberOfDays) {
         return roomPrice * numberOfDays;
     }

@@ -600,6 +600,10 @@ public class Main {
                     throw new IllegalArgumentException("Invalid date range. Please enter a date between " + minDate + " and " + maxDate);
                 }
 
+                if (Indate.equals(Outdate)) {
+                    throw new IllegalArgumentException("Check-out date cannot be the same as check-in date");
+                }
+
                 reservation.setCheckindate(Indate);
                 reservation.setCheckoutdate(Outdate);
 
@@ -686,6 +690,8 @@ public class Main {
         //service
         Service(selectedHotel);
 
+        double totalRoomPrice = reservation.calTotalRoomPrice(reservation.getRoomPrice(), reservation.getNumDays());
+        reservation.setTotalPrice(totalRoomPrice);
         //Store data to customer class
         customer.addReservation(reservation);
 
