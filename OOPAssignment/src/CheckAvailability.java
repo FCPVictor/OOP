@@ -35,7 +35,7 @@ public class CheckAvailability {
                 + "                              /_/    \\_\\/_/    \\_\\_____|______/_/    \\_\\____/_____|______|_____|  |_|     |_|   \n"
                 + "                                                                                                                \n");
 
-        // Get the check-in date
+
         LocalDate checkInDate = null;
         while (checkInDate == null) {
             System.out.print("                  Enter the check-in date (yyyy-MM-dd): ");
@@ -44,7 +44,7 @@ public class CheckAvailability {
             try {
                 checkInDate = LocalDate.parse(checkInDateStr, DateTimeFormatter.ISO_DATE);
 
-                // Validate the check-in date range
+
                 if (checkInDate.isBefore(LocalDate.of(2023, 6, 1)) || checkInDate.isAfter(LocalDate.of(2023, 6, 7))) {
                     System.out.println("                              ________ _______    _______     ___  _______     \n"
                             + "                             |_   __  |_   __ \\  |_   __ \\  .'   `|_   __ \\    \n"
@@ -68,7 +68,7 @@ public class CheckAvailability {
             }
         }
 
-        // Get the check-out date
+
         LocalDate checkOutDate = null;
         while (checkOutDate == null) {
             System.out.print("                  Enter the check-out date (yyyy-MM-dd): ");
@@ -77,7 +77,7 @@ public class CheckAvailability {
             try {
                 checkOutDate = LocalDate.parse(checkOutDateStr, DateTimeFormatter.ISO_DATE);
 
-                // Validate the check-out date range
+
                 if (checkOutDate.isBefore(checkInDate) || checkOutDate.isAfter(checkInDate.plusDays(6))) {
                     System.out.println("                              ________ _______    _______     ___  _______     \n"
                             + "                             |_   __  |_   __ \\  |_   __ \\  .'   `|_   __ \\    \n"
@@ -109,7 +109,7 @@ public class CheckAvailability {
                 + "                                                                                                    __/ |\n"
                 + "                                                                                                   |___/ ");
 
-        // Display hotel names and room types
+
         for (int i = 0; i < hotels.size(); i++) {
             System.out.println("                   " + (i + 1) + ". " + hotels.get(i));
             ArrayList<Room> rooms = hotels.get(i).getRooms();
@@ -118,31 +118,29 @@ public class CheckAvailability {
             }
         }
 
-        // Get the hotel index
+
         int hotelIndex;
         do {
             System.out.print("                                              Select a hotel (1-" + hotels.size() + "): ");
             hotelIndex = scanner.nextInt();
-            scanner.nextLine(); // Consume newline character
+            scanner.nextLine();
 
             if (hotelIndex < 1 || hotelIndex > hotels.size()) {
                 System.out.println("                        Invalid hotel selection. Please enter a number between 1 and " + hotels.size() + ".");
             }
         } while (hotelIndex < 1 || hotelIndex > hotels.size());
 
-// Get the room index
         int roomIndex;
         do {
             System.out.print("                                              Select a room type (1-" + hotels.get(hotelIndex - 1).getRooms().size() + "): ");
             roomIndex = scanner.nextInt();
-            scanner.nextLine(); // Consume newline character
+            scanner.nextLine();
 
             if (roomIndex < 1 || roomIndex > hotels.get(hotelIndex - 1).getRooms().size()) {
                 System.out.println("                        Invalid room selection. Please enter a number between 1 and " + hotels.get(hotelIndex - 1).getRooms().size() + ".");
             }
         } while (roomIndex < 1 || roomIndex > hotels.get(hotelIndex - 1).getRooms().size());
 
-// Check if the room is fully booked for the requested dates
         boolean fullyBooked = false;
         LocalDate currentDate = checkInDate;
         while (!currentDate.isAfter(checkOutDate)) {
