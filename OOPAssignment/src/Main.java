@@ -3,7 +3,12 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
 import java.util.concurrent.ThreadLocalRandom;
+
+import Service.*;
+
 
 
 public class Main {
@@ -39,6 +44,8 @@ public class Main {
      * }
      *
      * */
+
+
 
 
 
@@ -98,14 +105,14 @@ public class Main {
     public static void main(String[] args) {
         User user = null;
         DA da = new DA();
-        Print artWork = new Print();
+        Print print = new Print();
 
         Scanner scanner = new Scanner(System.in);
 
         //Prompt welcome msg
-        artWork.welcomeScreen();
+        welcomeScreen();
         do {
-            artWork.displayMenu();
+            displayMenu();
             int userOption = scanner.nextInt();
 
             while (userOption < 0 || userOption > 2) {
@@ -117,7 +124,7 @@ public class Main {
             }
             if (userOption == 2) {
                 Scanner scanner1 = new Scanner(System.in);
-                artWork.printArtWork(2);
+                print.printArtWork(2);
                 // Prompt the user to enter their username and password
                 System.out.print("Enter your username: ");
                 String username = scanner1.nextLine();
@@ -129,7 +136,7 @@ public class Main {
 
             } else if (userOption == 1) {
                 Scanner scanner2 = new Scanner(System.in);
-                artWork.printArtWork(1);
+                print.printArtWork(1);
                 try {
                     System.out.print("Enter your username to login: ");
                     String username = scanner2.nextLine();
@@ -429,8 +436,14 @@ public class Main {
 
                 case 2:
 
-                    artWork.reservationOption();
-                    int resinput = scanner.nextInt();;
+                    System.out.println("================================");
+                    System.out.println("|     1. Make Reservation      |");
+                    System.out.println("|     2. Modify Reservation    |");
+                    System.out.println("|     3. Cancel Reservation    |");
+                    System.out.println("|     4. Exit                  |");
+                    System.out.println("================================\n");
+                    System.out.print("Select your option : ");
+                    int resinput = scanner.nextInt();
 
                     switch (resinput){
                         case 1:
@@ -453,7 +466,7 @@ public class Main {
                     double balance = 0.0;
                     Main m = new Main();
 
-                    artWork.printPaymentArt();
+                    print.printPaymentArt();
                     subtotal = m.generateRandom();
 
                     String method = m.paymentMethods(subtotal);
@@ -662,6 +675,11 @@ public class Main {
     }
 
 
+    public static void welcomeScreen() {
+
+        String artwork;
+
+        artwork = """
 
                 888       888          888                                                \s
                 888   o   888          888                                                \s
@@ -684,38 +702,6 @@ public class Main {
         System.out.print("\t\tEnter the desired option:    ");
     }
 
-    public static void printArtWork(int option) {
-
-        String artWork;
-        if (option == 1) {
-            artWork = """
-
-                     .o88b. db    db .d8888. d888888b  .d88b.  .88b  d88. d88888b d8888b.      db       .d88b.   d888b  d888888b d8b   db\s
-                    d8P  Y8 88    88 88'  YP `~~88~~' .8P  Y8. 88'YbdP`88 88'     88  `8D      88      .8P  Y8. 88' Y8b   `88'   888o  88\s
-                    8P      88    88 `8bo.      88    88    88 88  88  88 88ooooo 88oobY'      88      88    88 88         88    88V8o 88\s
-                    8b      88    88   `Y8b.    88    88    88 88  88  88 88~~~~~ 88`8b        88      88    88 88  ooo    88    88 V8o88\s
-                    Y8b  d8 88b  d88 db   8D    88    `8b  d8' 88  88  88 88.     88 `88.      88booo. `8b  d8' 88. ~8~   .88.   88  V888\s
-                     `Y88P' ~Y8888P' `8888Y'    YP     `Y88P'  YP  YP  YP Y88888P 88   YD      Y88888P  `Y88P'   Y888P  Y888888P VP   V8P\s
-                                                                                                                                         \s
-                                                                                                                                         \s
-                    """;
-            System.out.println(artWork);
-        } else if (option == 2) {
-            artWork = """
-
-                     .o88b. db    db .d8888. d888888b  .d88b.  .88b  d88. d88888b d8888b.      .d8888. d888888b  d888b  d8b   db db    db d8888b.\s
-                    d8P  Y8 88    88 88'  YP `~~88~~' .8P  Y8. 88'YbdP`88 88'     88  `8D      88'  YP   `88'   88' Y8b 888o  88 88    88 88  `8D\s
-                    8P      88    88 `8bo.      88    88    88 88  88  88 88ooooo 88oobY'      `8bo.      88    88      88V8o 88 88    88 88oodD'\s
-                    8b      88    88   `Y8b.    88    88    88 88  88  88 88~~~~~ 88`8b          `Y8b.    88    88  ooo 88 V8o88 88    88 88~~~  \s
-                    Y8b  d8 88b  d88 db   8D    88    `8b  d8' 88  88  88 88.     88 `88.      db   8D   .88.   88. ~8~ 88  V888 88b  d88 88     \s
-                     `Y88P' ~Y8888P' `8888Y'    YP     `Y88P'  YP  YP  YP Y88888P 88   YD      `8888Y' Y888888P  Y888P  VP   V8P ~Y8888P' 88     \s
-                                                                                                                                                 \s
-                                                                                                                                                 \s
-                    """;
-            System.out.println(artWork);
-
-        }
-    }
     public static void Service(Hotel selectedHotel) {
         Scanner scan = new Scanner(System.in);
         //Hotel A Menu
@@ -838,7 +824,7 @@ public class Main {
                     }
                     boolean validateTrans = true;
                     while (validateTrans) {
-                        
+
                         int t;
                         int tQty;
 
@@ -864,7 +850,7 @@ public class Main {
                             System.out.println("Please input agn.");
                             validateTrans = true;
                         }
-                        
+
                     }
 
                 } else if (selection.equals("2")) {
@@ -874,7 +860,7 @@ public class Main {
                     }
                     boolean validateFood = true;
                     while (validateFood) {
-                        
+
                         int f;
                         int fQty;
                         System.out.println();
@@ -899,7 +885,7 @@ public class Main {
                             System.out.println("Please input agn.");
                             validateFood = true;
                         }
-                        
+
                     }
                 } else if (selection.equals("3")) {
                     System.out.println("Holiday Inn Subang Hotel Beverage Service");
@@ -968,7 +954,7 @@ public class Main {
 
             System.out.println("Thank you for ordering services. \nTotal Amount for services is RM " + String.format("%.2f", subTotal));
 
-        } else if (hotelChoice.equals("2")) {
+        } else if (hotelChoice.equals("Hilton Kuala Lumpur")) {
             boolean validService = true;
             while (validService) {
                 displayServiceMenu();
@@ -981,7 +967,7 @@ public class Main {
                     }
                     boolean validateTrans = true;
                     while (validateTrans) {
-                        
+
                         int t;
                         int tQty;
 
@@ -1007,7 +993,7 @@ public class Main {
                             System.out.println("Please input agn.");
                             validateTrans = true;
                         }
-                        
+
                     }
 
                 } else if (selection.equals("Hilton Kuala Lumpur")) {
@@ -1017,7 +1003,7 @@ public class Main {
                     }
                     boolean validateFood = true;
                     while (validateFood) {
-                        
+
                         int f;
                         int fQty;
                         System.out.println();
@@ -1042,7 +1028,7 @@ public class Main {
                             System.out.println("Please input agn.");
                             validateFood = true;
                         }
-                        
+
                     }
                 } else if (selection.equals("3")) {
                     System.out.println("Hilton Kuala Lumpur Hotel Beverage Service");
@@ -1123,7 +1109,7 @@ public class Main {
                     }
                     boolean validateTrans = true;
                     while (validateTrans) {
-                        
+
                         int t;
                         int tQty;
 
@@ -1149,7 +1135,7 @@ public class Main {
                             System.out.println("Please input agn.");
                             validateTrans = true;
                         }
-                        
+
                     }
 
                 } else if (selection.equals("2")) {
@@ -1159,7 +1145,7 @@ public class Main {
                     }
                     boolean validateFood = true;
                     while (validateFood) {
-                        
+
                         int f;
                         int fQty;
                         System.out.println();
@@ -1184,7 +1170,7 @@ public class Main {
                             System.out.println("Please input agn.");
                             validateFood = true;
                         }
-                        
+
                     }
                 } else if (selection.equals("3")) {
                     System.out.println("Hard Rock Kuala Lumpur Hotel Beverage Service");
@@ -1290,7 +1276,7 @@ public class Main {
                             System.out.println("Please input agn.");
                             validateTrans = true;
                         }
-                        
+
                     }
 
                 } else if (selection.equals("2")) {
@@ -1300,7 +1286,7 @@ public class Main {
                     }
                     boolean validateFood = true;
                     while (validateFood) {
-                        
+
                         int f;
                         int fQty;
                         System.out.println();
@@ -1325,7 +1311,7 @@ public class Main {
                             System.out.println("Please input agn.");
                             validateFood = true;
                         }
-                        
+
                     }
                 } else if (selection.equals("3")) {
                     System.out.println("Sepang Resort Hotel Beverage Service");
@@ -1408,7 +1394,7 @@ public class Main {
                     }
                     boolean validateTrans = true;
                     while (validateTrans) {
-                        
+
                         int t;
                         int tQty;
 
@@ -1434,7 +1420,7 @@ public class Main {
                             System.out.println("Please input agn.");
                             validateTrans = true;
                         }
-                        
+
                     }
 
                 } else if (selection.equals("2")) {
@@ -1444,7 +1430,7 @@ public class Main {
                     }
                     boolean validateFood = true;
                     while (validateFood) {
-                        
+
                         int f;
                         int fQty;
                         System.out.println();
@@ -1469,7 +1455,7 @@ public class Main {
                             System.out.println("Please input agn.");
                             validateFood = true;
                         }
-                        
+
                     }
                 } else if (selection.equals("3")) {
                     System.out.println("Le Meridien Kuala Lumpur Hotel Beverage Service");
@@ -1555,4 +1541,3 @@ public class Main {
         System.out.printf("%70s","      PLEASE SELECT THE MENU CATEGORY         \n");
     }
 }
-
