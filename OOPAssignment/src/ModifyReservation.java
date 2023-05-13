@@ -29,8 +29,8 @@ public class ModifyReservation {
         double additionalCost = (numOfDays - currentNumOfDays) * pricePerDay;
 
         reservation.setCheckindate(checkInDate);
-        reservation.setNumDays(numOfDays);
-        reservation.setTotalPrice(reservation.getTotalPrice() + additionalCost);
+        reservation.calNumDays();
+        reservation.calTotalRoomPrice();
     }
 
     public void modifyCheckOutDate(LocalDate checkOutDate) {
@@ -44,10 +44,10 @@ public class ModifyReservation {
         double additionalCost = (numOfDays - currentNumOfDays) * pricePerDay;
 
         reservation.setCheckoutdate(checkOutDate);
-        reservation.setNumDays(numOfDays);
-        reservation.setTotalPrice(reservation.getTotalPrice() + additionalCost);
+        reservation.calNumDays();
+        reservation.calTotalRoomPrice();
     }
-    
+
     public void makeChanges() {
         Scanner scanner = new Scanner(System.in);
 
