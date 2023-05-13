@@ -1010,7 +1010,7 @@ public class Main {
 
             System.out.println("Thank you for ordering services. \nTotal Amount for services is RM " + String.format("%.2f", subTotal));
 
-        } else if (hotelChoice.equals("2")) {
+        } else if (hotelChoice.equals("Hilton Kuala Lumpur")) {
             boolean validService = true;
             while (validService) {
                 displayServiceMenu();
