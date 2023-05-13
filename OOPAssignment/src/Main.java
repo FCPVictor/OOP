@@ -1,5 +1,6 @@
 import java.sql.*;
 import java.time.LocalDate;
+import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.*;
@@ -110,9 +111,9 @@ public class Main {
         Scanner scanner = new Scanner(System.in);
 
         //Prompt welcome msg
-        welcomeScreen();
+        print.welcomeScreen();
         do {
-            displayMenu();
+            print.displayMenu();
             int userOption = scanner.nextInt();
 
             while (userOption < 0 || userOption > 2) {
@@ -480,7 +481,7 @@ public class Main {
                     int lastIndex = customer.getReservation().size() - 1;
 
                     print.printPaymentArt();
-                    subtotal = (fd.getServiceSubtotal() + customer.getReservation().get(lastIndex).getTotalPrice());
+                    subtotal = (fd.getServiceSubtotal() + customer.getReservation().get(lastIndex).calTotalRoomPrice());
                     System.out.printf("Amount to pay: RM %.2f\n", subtotal);
                     String method = m.paymentMethods(subtotal);
 
@@ -670,7 +671,7 @@ public class Main {
                                 .orElse(0.0);
 
                         reservation.setRoom(selectedRoom);
-                        reservation.setTotalPrice(selectedRoomPrice); //set room price
+
                         break; // exit loop since we found a match
                     }
                 }
@@ -690,8 +691,6 @@ public class Main {
         //service
         Service(selectedHotel);
 
-        double totalRoomPrice = reservation.calTotalRoomPrice(reservation.getRoomPrice(), reservation.getNumDays());
-        reservation.setTotalPrice(totalRoomPrice);
         //Store data to customer class
         customer.addReservation(reservation);
 
@@ -706,33 +705,6 @@ public class Main {
         return customer;
     }
 
-
-    public static void welcomeScreen() {
-
-        String artwork;
-
-        artwork = """
-
-                888       888          888                                                \s
-                888   o   888          888                                                \s
-                888  d8b  888          888                                                \s
-                888 d888b 888  .d88b.  888  .d8888b  .d88b.  88888b.d88b.   .d88b.        \s
-                888d88888b888 d8P  Y8b 888 d88P"    d88""88b 888 "888 "88b d8P  Y8b       \s
-                88888P Y88888 88888888 888 888      888  888 888  888  888 88888888       \s
-                8888P   Y8888 Y8b.     888 Y88b.    Y88..88P 888  888  888 Y8b.           \s
-                888P     Y888  "Y8888  888  "Y8888P  "Y88P"  888  888  888  "Y8888        \s
-                                   
-                """;
-
-        System.out.println(artwork);
-    }
-
-    public static void displayMenu() {
-        System.out.println("\n\n\t\t(a) Press 0 to Exit.");
-        System.out.println("\t\t(b) Press 1 to Login");
-        System.out.println("\t\t(c) Press 2 to Register");
-        System.out.print("\t\tEnter the desired option:    ");
-    }
 
     public static void Service(Hotel selectedHotel) {
         Scanner scan = new Scanner(System.in);

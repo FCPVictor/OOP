@@ -1,4 +1,5 @@
 import java.time.LocalDate;
+import java.time.Period;
 
 public class Reservation {
     private Customer customer;
@@ -10,14 +11,11 @@ public class Reservation {
     private Hotel hotel;
     private String hotelName;
     private Room room;
-    private double roomPrice;
-    private long numDays;
-    private double totalPrice;
 
     public Reservation() {
     }
 
-    public Reservation(Customer customer, int resId, LocalDate checkindate, LocalDate checkoutdate, int pax, Hotel hotel, String hotelName, Room room, double roomPrice,long numDays, double totalPrice) {
+    public Reservation(Customer customer, int resId, LocalDate checkindate, LocalDate checkoutdate, int pax, Hotel hotel, String hotelName, Room room) {
         this.customer = customer;
         this.resId = nextResId;
         this.checkindate = checkindate;
@@ -26,9 +24,7 @@ public class Reservation {
         this.hotel = hotel;
         this.hotelName = hotelName;
         this.room = room;
-        this.roomPrice = roomPrice;
-        this.numDays = numDays;
-        this.totalPrice = totalPrice;
+
 
         customer.addReservation(this);
         nextResId++;
@@ -98,30 +94,6 @@ public class Reservation {
         this.room = room;
     }
 
-    public double getRoomPrice() {
-        return roomPrice;
-    }
-
-    public void setRoomPrice(double roomPrice) {
-        this.roomPrice = roomPrice;
-    }
-
-    public long getNumDays() {
-        return numDays;
-    }
-
-    public void setNumDays(long numDays) {
-        this.numDays = numDays;
-    }
-
-    public double getTotalPrice() {
-        return totalPrice;
-    }
-
-    public void setTotalPrice(double totalPrice) {
-        this.totalPrice = totalPrice;
-    }
-
     public static void ReservationHeader(){
         System.out.println("****************************************************************************");
         System.out.println("*  _____  ______  _____ ______ _______      __  _______ _____ ____  _   __  *");
@@ -141,14 +113,18 @@ public class Reservation {
                 "Check-in Date  : " + checkindate.toString() + "\n" +
                 "Check-out Date : " + checkoutdate.toString() + "\n" +
                 "Pax            : " + getPax() + "\n" +
-                "Days of Stay   : " + getNumDays() + "\n" +
-                "Room Price     : " + getRoomPrice() +"\n" +
+                "Days of Stay   : " + calNumDays() + "\n" +
+                "Room Price     : " + room.getPrice() +"\n" +
                 "---------------------------------------------\n" +
-                "Total Price    : " + getTotalPrice() + "\n" +
+                "Total Price    : " + calTotalRoomPrice() + "\n" +
                 "---------------------------------------------\n";
     }
 
-    public double calTotalRoomPrice(double roomPrice, long numberOfDays) {
-        return roomPrice * numberOfDays;
+    public long calNumDays() {
+        return Period.between(checkindate, checkoutdate).getDays();
+    }
+
+    public double calTotalRoomPrice() {
+        return room.getPrice() * calNumDays() ;
     }
 }
