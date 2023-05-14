@@ -1575,10 +1575,12 @@ public class Main {
                     validtopup = true;
                 }
             } catch (InputMismatchException e) {
+                validtopup = false;
                 System.out.println("Please Enter a Valid Amount");
                 input.nextLine(); // clear the input buffer
             } catch (IllegalArgumentException e) {
                 System.out.println(e.getMessage());
+                validtopup = false;
             }
 
         } while (validtopup == false);
