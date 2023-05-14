@@ -3,7 +3,7 @@ import java.util.ArrayList;
 public class Customer {
     private String custId;
     private static String custName;
-    private int custIc;
+    private String custIc;
     private String contact;
     private String email;
     private double balance;
@@ -12,7 +12,7 @@ public class Customer {
     public Customer() {
     }
 
-    public Customer(String custId, int custIc, String contact, String email, double balance) {
+    public Customer(String custId, String custIc, String contact, String email, double balance) {
         this.custId = custId;
         this.custIc = custIc;
         this.contact = contact;
@@ -37,11 +37,11 @@ public class Customer {
         Customer.custName = custName;
     }
 
-    public int getCustIc() {
+    public String getCustIc() {
         return custIc;
     }
 
-    public void setCustIc(int custIc) {
+    public void setCustIc(String custIc) {
         this.custIc = custIc;
     }
 
