@@ -448,29 +448,7 @@ public class Main {
                     //Choice
                 case 3:
                     topupProcess(customer);
-                    if (wallet.getToupAmount() >= 2000){
-                        member.setTier("Diamond");
-                        member.setPoints(wallet.getToupAmount());
-                        System.out.println("Congratulation! You achieve " + member.getTier() + "tier now.");
-                        System.out.println("You can now enjoy " + member.getDiscount() + "% discount for you payment.");
-                    } else if (wallet.getToupAmount() >= 1500) {
-                        member.setTier("Gold");
-                        member.setPoints(wallet.getToupAmount());
-                        System.out.println("Congratulation! You achieve " + member.getTier() + "tier now.");
-                        System.out.println("You can now enjoy " + member.getDiscount() + "% discount for you payment.");
-                    }else if(wallet.getToupAmount() >= 1000){
-                        member.setTier("Silver");
-                        member.setPoints(wallet.getToupAmount());
-                        System.out.println("Congratulation! You achieve " + member.getTier() + "tier now.");
-                        System.out.println("You can now enjoy " + member.getDiscount() + "% discount for you payment.");
-                    }else if(wallet.getToupAmount() >= 500){
-                        member.setTier("Bronze");
-                        member.setPoints(wallet.getToupAmount());
-                        System.out.println("Congratulation! You achieve " + member.getTier() + "tier now.");
-                        System.out.println("You can now enjoy " + member.getDiscount() + "% discount for you payment.");
-                    }else {
-                        member.setTier("Non");
-                    }
+
                     break;
 
                 case 4:
@@ -1574,6 +1552,29 @@ public class Main {
                     System.out.println("==============================");
                     System.out.println("Current balance : RM" + customer.getBalance() );
                     System.out.println("==============================");
+                    if (wallet.getToupAmount() >= 2000){
+                        member.setTier("Diamond");
+                        member.setPoints(wallet.getToupAmount());
+                        System.out.println("Congratulation! You achieve " + member.getTier() + " tier now.");
+                        System.out.println("You can now enjoy " + member.getDiscount() *100 + "% discount for you payment.");
+                    } else if (wallet.getToupAmount() >= 1500) {
+                        member.setTier("Gold");
+                        member.setPoints(wallet.getToupAmount());
+                        System.out.println("Congratulation! You achieve " + member.getTier() + " tier now.");
+                        System.out.println("You can now enjoy " + member.getDiscount() *100 + "% discount for you payment.");
+                    }else if(wallet.getToupAmount() >= 1000){
+                        member.setTier("Silver");
+                        member.setPoints(wallet.getToupAmount());
+                        System.out.println("Congratulation! You achieve " + member.getTier() + " tier now.");
+                        System.out.println("You can now enjoy " + member.getDiscount() *100 + "% discount for you payment.");
+                    }else if(wallet.getToupAmount() >= 500){
+                        member.setTier("Bronze");
+                        member.setPoints(wallet.getToupAmount());
+                        System.out.println("Congratulation! You achieve " + member.getTier() + " tier now.");
+                        System.out.println("You can now enjoy " + member.getDiscount() *100 + "% discount for you payment.");
+                    }else {
+                        member.setTier("Non");
+                    }
                     validtopup = true;
                 }
             } catch (InputMismatchException e) {
