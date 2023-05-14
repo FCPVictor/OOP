@@ -215,8 +215,7 @@ public class Main {
             System.out.println("2. Reservation");
             System.out.println("3. Top Up");
             System.out.println("4. Profile");
-            System.out.println("5. Payment");
-            System.out.println("6. Exit");
+            System.out.println("5. Exit");
 
             System.out.print("Enter your choice: ");
             choice = scanner.nextInt();
