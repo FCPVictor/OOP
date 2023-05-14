@@ -2,7 +2,7 @@ package Service;
 
 import java.util.ArrayList;
 
-public class TransMenu extends MenuAbs {
+public class TransMenu extends ServiceMenu {
     private int quantity;
     public TransMenu(){
 

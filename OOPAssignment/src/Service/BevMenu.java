@@ -2,7 +2,7 @@ package Service;
 
 import java.util.ArrayList;
 
-public class BevMenu extends MenuAbs {
+public class BevMenu extends ServiceMenu {
     private int quantity;
     public BevMenu(){
 

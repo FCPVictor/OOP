@@ -1,5 +1,5 @@
 package Service;
-public abstract class MenuAbs implements MenuInterface{
+public abstract class ServiceMenu implements MenuInterface{
     private String name;
     private double price;
 
@@ -21,11 +21,11 @@ public abstract class MenuAbs implements MenuInterface{
     }
 
 
-    public MenuAbs(){
+    public ServiceMenu(){
 
     }
 
-    public MenuAbs(String name, double price){
+    public ServiceMenu(String name, double price){
         this.name = name;
         this.price = price;
     }
