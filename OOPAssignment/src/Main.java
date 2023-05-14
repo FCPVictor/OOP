@@ -73,6 +73,7 @@ public class Main {
 
 
     public static void main(String[] args) {
+        Customer customer = new Customer();
         User user = null;
         DA da = new DA();
         Print print = new Print();
@@ -104,6 +105,8 @@ public class Main {
 
                 da.insertRecord(username, password);
 
+                inputCustDetail(customer,scanner);
+
             } else if (userOption == 1) {
                 Scanner scanner2 = new Scanner(System.in);
                 print.printArtWork(1);
@@ -131,7 +134,6 @@ public class Main {
         } while (user == null);
         //System.out.println(user.getCustomerID());
 
-        Customer customer = new Customer();
         customer.setCustId(user.getCustomerID() + ""); // convert datatype to String
         //Main menu
         ArrayList<Hotel> hotels = new ArrayList<>();
@@ -178,8 +180,9 @@ public class Main {
             System.out.println("1. Search for Hotels");
             System.out.println("2. Reservation");
             System.out.println("3. Top Up");
-            System.out.println("4. Payment");
-            System.out.println("5. Exit");
+            System.out.println("4. Profile");
+            System.out.println("5. Payment");
+            System.out.println("6. Exit");
 
             System.out.print("Enter your choice: ");
             choice = scanner.nextInt();
@@ -421,6 +424,7 @@ public class Main {
                     switch (resinput){
                         case 1:
                             customer = MakeReservationProcess(hotels, rooms, customer);
+                            break;
                         case 2:
                             break;
 
@@ -432,14 +436,19 @@ public class Main {
                             System.out.println("Invalid Input");
                             break;
                     }
+                    break;
 
 
                     //Choice
                 case 3:
-                    System.out.println("Thank you for using Hotel Booking System.");
+                    topupProcess(customer);
                     break;
 
                 case 4:
+                    DisplayProfile(customer);
+                    break;
+
+                case 5:
                     //Payment part
                     Scanner scanner1 = new Scanner(System.in);
                     double subtotal = 0.0;
@@ -457,9 +466,9 @@ public class Main {
                     System.out.printf("Thank you for visiting! \nPayment method: " + method + "\nPlease pay:RM %.2f\n", subtotal);
 
                     balance = m.getPayment(subtotal);
-                    break;
 
-                case 5:
+                    break;
+                case 6:
                     //Exit
                     System.out.println("Thank you!!");
                     break;
@@ -469,7 +478,7 @@ public class Main {
                     break;
             }
 
-        } while (choice != 5);
+        } while (choice != 6);
 
 
     }
@@ -815,9 +824,7 @@ public class Main {
                                 tOrder.setQuantity(tQty);
                                 transOrders.add(new TransMenu(transMenuA[t - 1].getName(), tOrder.getPrice(), tQty));
                                 break;
-                            } else if (t == 5) {
-                                System.exit(0);
-                            } else
+                            }  else
                                 System.out.println("Invalid input for transport service. Please choose between 1-4.");
                             validateTrans = true;
                         } catch (NumberFormatException e) {
@@ -850,9 +857,7 @@ public class Main {
                                 fOrder.setQuantity(fQty);
                                 foodOrders.add(new FoodMenu(foodMenuA[f - 1].getName(), fOrder.getPrice(), fQty));
                                 break;
-                            } else if (f == 5) {
-                                System.exit(0);
-                            } else
+                            }  else
                                 System.out.println("Invalid input for food choice. Please choose between 1-4.");
                             validateFood = true;
                         } catch (NumberFormatException e) {
@@ -883,9 +888,7 @@ public class Main {
                                 bOrder.setQuantity(bQty);
                                 bevOrders.add(new BevMenu(bevMenuA[b - 1].getName(), bOrder.getPrice(), bQty));
                                 break;
-                            } else if (b == 5) {
-                                System.exit(0);
-                            } else
+                            }  else
                                 System.out.println("Invalid input for beverage choice. Please choose between 1-4.");
                             validateBev = true;
                         } catch (NumberFormatException e) {
@@ -927,7 +930,7 @@ public class Main {
             }
             System.out.print("\n-------------Service Details----------------");
             System.out.println("\nService Price   : RM" + String.format("%.2f",subTotal));
-            System.out.print("\n--------------------------------------------");
+            System.out.print("--------------------------------------------");
             fd.setServiceSubtotal(subTotal);
 
         } else if (hotelChoice.equals("Hilton Kuala Lumpur")) {
@@ -960,9 +963,7 @@ public class Main {
                                 tOrder.setQuantity(tQty);
                                 transOrders.add(new TransMenu(transMenuB[t - 1].getName(), tOrder.getPrice(), tQty));
                                 break;
-                            } else if (t == 5) {
-                                System.exit(0);
-                            } else
+                            }  else
                                 System.out.println("Invalid input for transport service. Please choose between 1-4.");
                             validateTrans = true;
                         } catch (NumberFormatException e) {
@@ -995,9 +996,7 @@ public class Main {
                                 fOrder.setQuantity(fQty);
                                 foodOrders.add(new FoodMenu(foodMenuB[f - 1].getName(), fOrder.getPrice(), fQty));
                                 break;
-                            } else if (f == 5) {
-                                System.exit(0);
-                            } else
+                            }  else
                                 System.out.println("Invalid input for food choice. Please choose between 1-4.");
                             validateFood = true;
                         } catch (NumberFormatException e) {
@@ -1028,9 +1027,7 @@ public class Main {
                                 bOrder.setQuantity(bQty);
                                 bevOrders.add(new BevMenu(bevMenuB[b - 1].getName(), bOrder.getPrice(), bQty));
                                 break;
-                            } else if (b == 5) {
-                                System.exit(0);
-                            } else
+                            }  else
                                 System.out.println("Invalid input for beverage choice. Please choose between 1-4.");
                             validateBev = true;
                         } catch (NumberFormatException e) {
@@ -1072,7 +1069,7 @@ public class Main {
             }
             System.out.print("\n-------------Service Details----------------");
             System.out.println("\nService Price   : RM" + String.format("%.2f",subTotal));
-            System.out.print("\n--------------------------------------------");
+            System.out.print("--------------------------------------------");
             fd.setServiceSubtotal(subTotal);
         } else if (hotelChoice.equals("Hard Rock Kuala Lumpur")) {
             boolean validService = true;
@@ -1104,9 +1101,7 @@ public class Main {
                                 tOrder.setQuantity(tQty);
                                 transOrders.add(new TransMenu(transMenuC[t - 1].getName(), tOrder.getPrice(), tQty));
                                 break;
-                            } else if (t == 5) {
-                                System.exit(0);
-                            } else
+                            }  else
                                 System.out.println("Invalid input for transport service. Please choose between 1-4.");
                             validateTrans = true;
                         } catch (NumberFormatException e) {
@@ -1139,9 +1134,7 @@ public class Main {
                                 fOrder.setQuantity(fQty);
                                 foodOrders.add(new FoodMenu(foodMenuC[f - 1].getName(), fOrder.getPrice(), fQty));
                                 break;
-                            } else if (f == 5) {
-                                System.exit(0);
-                            } else
+                            }  else
                                 System.out.println("Invalid input for food choice. Please choose between 1-4.");
                             validateFood = true;
                         } catch (NumberFormatException e) {
@@ -1172,9 +1165,7 @@ public class Main {
                                 bOrder.setQuantity(bQty);
                                 bevOrders.add(new BevMenu(bevMenuC[b - 1].getName(), bOrder.getPrice(), bQty));
                                 break;
-                            } else if (b == 5) {
-                                System.exit(0);
-                            } else
+                            }  else
                                 System.out.println("Invalid input for beverage choice. Please choose between 1-4.");
                             validateBev = true;
                         } catch (NumberFormatException e) {
@@ -1216,7 +1207,7 @@ public class Main {
             }
             System.out.print("\n-------------Service Details----------------");
             System.out.println("\nService Price   : RM" + String.format("%.2f",subTotal));
-            System.out.print("\n--------------------------------------------");
+            System.out.print("--------------------------------------------");
             fd.setServiceSubtotal(subTotal);
         } else if (hotelChoice.equals("Sepang Resort")) {
             boolean validService = true;
@@ -1247,9 +1238,7 @@ public class Main {
                                 tOrder.setQuantity(tQty);
                                 transOrders.add(new TransMenu(transMenuD[t - 1].getName(), tOrder.getPrice(), tQty));
                                 break;
-                            } else if (t == 5) {
-                                System.exit(0);
-                            } else
+                            }  else
                                 System.out.println("Invalid input for transport service. Please choose between 1-4.");
                             validateTrans = true;
                         } catch (NumberFormatException e) {
@@ -1282,9 +1271,7 @@ public class Main {
                                 fOrder.setQuantity(fQty);
                                 foodOrders.add(new FoodMenu(foodMenuD[f - 1].getName(), fOrder.getPrice(), fQty));
                                 break;
-                            } else if (f == 5) {
-                                System.exit(0);
-                            } else
+                            }  else
                                 System.out.println("Invalid input for food choice. Please choose between 1-4.");
                             validateFood = true;
                         } catch (NumberFormatException e) {
@@ -1315,9 +1302,7 @@ public class Main {
                                 bOrder.setQuantity(bQty);
                                 bevOrders.add(new BevMenu(bevMenuD[b - 1].getName(), bOrder.getPrice(), bQty));
                                 break;
-                            } else if (b == 5) {
-                                System.exit(0);
-                            } else
+                            }  else
                                 System.out.println("Invalid input for beverage choice. Please choose between 1-4.");
                             validateBev = true;
                         } catch (NumberFormatException e) {
@@ -1392,9 +1377,7 @@ public class Main {
                                 tOrder.setQuantity(tQty);
                                 transOrders.add(new TransMenu(transMenuE[t - 1].getName(), tOrder.getPrice(), tQty));
                                 break;
-                            } else if (t == 5) {
-                                System.exit(0);
-                            } else
+                            }  else
                                 System.out.println("Invalid input for transport service. Please choose between 1-4.");
                             validateTrans = true;
                         } catch (NumberFormatException e) {
@@ -1427,9 +1410,7 @@ public class Main {
                                 fOrder.setQuantity(fQty);
                                 foodOrders.add(new FoodMenu(foodMenuE[f - 1].getName(), fOrder.getPrice(), fQty));
                                 break;
-                            } else if (f == 5) {
-                                System.exit(0);
-                            } else
+                            }  else
                                 System.out.println("Invalid input for food choice. Please choose between 1-4.");
                             validateFood = true;
                         } catch (NumberFormatException e) {
@@ -1460,9 +1441,7 @@ public class Main {
                                 bOrder.setQuantity(bQty);
                                 bevOrders.add(new BevMenu(bevMenuE[b - 1].getName(), bOrder.getPrice(), bQty));
                                 break;
-                            } else if (b == 5) {
-                                System.exit(0);
-                            } else
+                            }  else
                                 System.out.println("Invalid input for beverage choice. Please choose between 1-4.");
                             validateBev = true;
                         } catch (NumberFormatException e) {
@@ -1504,7 +1483,7 @@ public class Main {
             }
             System.out.print("\n-------------Service Details----------------");
             System.out.println("\nService Price   : RM" + String.format("%.2f",subTotal));
-            System.out.print("\n--------------------------------------------");
+            System.out.print("--------------------------------------------");
 
             fd.setServiceSubtotal(subTotal);
 
@@ -1532,5 +1511,155 @@ public class Main {
         System.out.printf("%79s","                  4.Exit                             \n");
         System.out.printf("%78s","=====================================================\n");
         System.out.printf("%70s","            PLEASE SELECT THE MENU CATEGORY          \n");
+    }
+
+    public static void topupProcess(Customer customer) {
+        TopUp topUp = new TopUp();
+        boolean validtopup = true;
+        Scanner input = new Scanner(System.in);
+
+        //Display user details and account balance
+        topUp.topupHeader();
+
+        //Input top up amount
+
+        System.out.println("=============Enter Top Up Amount============");
+
+        do {
+            try {
+                System.out.print("Top Up Amount > ");
+                int topupAmount = input.nextInt();
+
+                if (topupAmount <= 0) {
+                    throw new IllegalArgumentException("Please Enter a Valid Amount");
+                } else {
+                    topUp.addFunds(customer, topupAmount);
+                    System.out.println("\n-------Top Up Successful-------");
+
+                    System.out.println("==============================");
+                    System.out.println("Current balance : RM" + customer.getBalance() );
+                    System.out.println("==============================");
+                    validtopup = true;
+                }
+            } catch (InputMismatchException e) {
+                System.out.println("Please Enter a Valid Amount");
+                input.nextLine(); // clear the input buffer
+            } catch (IllegalArgumentException e) {
+                System.out.println(e.getMessage());
+            }
+
+        } while (validtopup == false);
+
+    }
+
+    public static void inputCustDetail(Customer customer, Scanner input){
+
+        boolean validIC = true;
+        boolean validContact = true;
+        boolean validEmail = true;
+
+        //Header
+        System.out.println("=====================================================");
+        System.out.println("|         __     ______  _    _ _____               |\n" +
+                "|         \\ \\   / / __ \\| |  | |  __ \\              |\n" +
+                "|          \\ \\_/ / |  | | |  | | |__) |             |\n" +
+                "|           \\   /| |  | | |  | |  _  /              |\n" +
+                "|            | | | |__| | |__| | | \\ \\              |\n" +
+                "|  _____  ___|_| _\\____/ \\____/|_|__\\_\\      _____  |\n" +
+                "| |  __ \\|  ____|__   __|/\\   |_   _| |     / ____| |\n" +
+                "| | |  | | |__     | |  /  \\    | | | |    | (___   |\n" +
+                "| | |  | |  __|    | | / /\\ \\   | | | |     \\___ \\  |\n" +
+                "| | |__| | |____   | |/ ____ \\ _| |_| |____ ____) | |\n" +
+                "| |_____/|______|  |_/_/    \\_\\_____|______|_____/  |");
+        System.out.println("=====================================================");
+
+        //Prompt User Input
+        System.out.println("---------------------Create Your Profile-----------------------");
+        System.out.print("Enter Your Name :");
+        String name = input.next();
+        input.nextLine();
+
+        customer.setCustName(name);
+
+        //Get Customer IC
+        do {
+            System.out.print("\nEnter Your IC (xxxxxx-xx-xxxx): ");
+            String IC = input.nextLine();
+
+            // Check for the format of Malaysia IC (format: 000000-00-0000)
+            String icPattern = "\\d{6}-\\d{2}-\\d{4}";
+
+            try {
+                if (IC.matches(icPattern)) {
+                    validIC = true;
+                    customer.setCustIc(IC);
+                } else {
+                    throw new IllegalArgumentException("\nInvalid IC format. Please enter a valid Malaysian IC number (format: 000000-00-0000).");
+                }
+            } catch (IllegalArgumentException e) {
+                System.out.println("\n" + e.getMessage() + "\nPlease Try Again\n");
+                validIC = false;
+            }
+        } while (!validIC);
+
+
+        //Get Customer Contact
+        do {
+            System.out.print("Enter Your Contact Number (xxx-xxxxxxx): ");
+            String contact = input.next();
+            try {
+                // Check if contact number contains only digits and is exactly 10 digits long
+                if (contact.matches("\\d{3}-\\d{7}") || contact.matches("\\d{3}-\\d{8}")) {
+                    customer.setContact(contact);
+                    validContact = true;
+                } else {
+                    throw new IllegalArgumentException("\nInvalid contact number. Please enter you contact with dash.ln");
+                }
+            } catch (IllegalArgumentException e) {
+                System.out.println(e.getMessage());
+                validContact = false;
+            }
+        } while (!validContact);
+
+        //Get Customer Email
+        do {
+            System.out.print("Enter Your Email Address : ");
+            String email = input.next();
+
+            // Check if email is valid using regular expression
+            if (!email.matches("[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}")) {
+                System.out.println("\nPlease Enter a Valid Email Address\n");
+                validEmail = false;
+            } else {
+                customer.setEmail(email);
+                validEmail = true;
+            }
+        } while (validEmail == false);
+
+        System.out.println("   ------Profile Created------  ");
+
+    }
+
+    public static void DisplayProfile(Customer customer){
+
+        //Display header
+        System.out.println("=======================================================");
+        System.out.println("|  _____  _____   ____  ______ _____ _      ______  |\n" +
+                "| |  __ \\|  __ \\ / __ \\|  ____|_   _| |    |  ____| |\n" +
+                "| | |__) | |__) | |  | | |__    | | | |    | |__    |\n" +
+                "| |  ___/|  _  /| |  | |  __|   | | | |    |  __|   |\n" +
+                "| | |    | | \\ \\| |__| | |     _| |_| |____| |____  |\n" +
+                "| |_|    |_|  \\_\\\\____/|_|    |_____|______|______| |\n" +
+                "                                                  ");
+        System.out.println("=======================================================");
+
+        //Display Customer Data
+
+        System.out.println("Name            : " + customer.getCustName());
+        System.out.println("IC              : " + customer.getCustIc());
+        System.out.println("Contact         : " + customer.getContact());
+        System.out.println("Email           : " + customer.getEmail());
+        System.out.println("Account Balance : " + customer.getBalance());
+        System.out.println("=======================================================");
     }
 }
