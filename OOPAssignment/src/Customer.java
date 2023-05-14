@@ -74,6 +74,9 @@ public class Customer {
     public void addReservation(Reservation reservation){
         this.reservation.add(reservation);
     }
+    public void removeReservation(ArrayList<Reservation> reservation){
+        this.reservation.remove(reservation);
+    }
 
     public ArrayList<Reservation> getReservation() {
         return reservation;

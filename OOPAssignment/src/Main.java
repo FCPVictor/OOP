@@ -1,12 +1,8 @@
 import java.sql.*;
 import java.time.LocalDate;
-import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.*;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.util.concurrent.ThreadLocalRandom;
 
 import Loyalty.Loyalty;
 import Service.*;
@@ -18,103 +14,22 @@ public class Main {
 
     static FoodMenu fd = new FoodMenu();
     static TopUp wallet = new TopUp();
-    Print print = new Print();
     static Loyalty member = new Loyalty();
+    static int resId = 1010;
+    Print print = new Print();
+
+
 
 
 //    public double generateRandom() {
 //        return ThreadLocalRandom.current().nextDouble(10, 1000);
 //    } // Temporary for data generate only not used anymore
 
-    public double getPayment(double subtotal) {
-        Scanner scanner = new Scanner(System.in);
-        double userPayment;
-        double balance = 0;
-
-        do {
-
-            if (balance < 0) {
-                System.out.println("Insufficient payment! Please pay the correct value!");
-            } else {
-                System.out.print("Please Enter Your Payment: ");
-            }
-            userPayment = scanner.nextDouble();
-            balance = userPayment - subtotal;
-        } while (balance < 0);
-
-        System.out.println("Thanks for the payment! ! !");
-        System.out.printf("Here's your balance: RM %.2f", balance);
-
-        return balance;
-    }
-
-
-    public Payment paymentMethods(Customer customer, double subtotal, double total) {
-        Payment payment = null;
-        String method;
-        Scanner scanner = new Scanner(System.in);
-        int paymentMethod;
-        System.out.println("total variable:" + total);
-        do {
-            System.out.println("1. Cash");
-            System.out.println("2. Credit Card");
-            System.out.println("3. eWallet");
-            System.out.print("Select the payment method: ");
-            paymentMethod = scanner.nextInt();
-
-            while (paymentMethod < 1 || paymentMethod > 3) {
-                System.out.println("Invalid input! Please enter 1, 2, or 3 only.");
-                System.out.print("Select the payment method: ");
-                paymentMethod = scanner.nextInt();
-            }
-            switch (paymentMethod) {
-                case 1:
-                    payment = new CashPayment(total);
-                    break;
-                case 2:
-                    payment = new CreditCardPayment(total);
-                    break;
-                case 3:
-                   payment = new Wallet(total); //123
-
-                    break;
-                default:
-                    System.out.println("Invalid payment method selected.");
-            }
-
-
-
-        } while (paymentMethod < 1 || paymentMethod > 3);
-
-        payment.processPayment();
-        while (customer.getBalance() < total) {
-            System.out.println("Uh Oh, Insufficient Balance. Proceeding to TopUp Page...");
-            scanner.nextLine();
-            topupProcess(customer);
-            total = subtotal * member.getDiscount();
-            System.out.printf("Initial amount to pay: RM %.2f\n", subtotal);
-
-            if (member.getDiscount() > 0) {
-                System.out.printf("Member discount: RM %.2f\n", subtotal * member.getDiscount());
-            }
-
-             total = subtotal * (1 - member.getDiscount());
-
-            System.out.printf("Amount to pay: RM %.2f\n", total);
-        }
-
-        payment.setAmount(total);
-
-        return payment;
-    }
-
-
     public static void main(String[] args) {
         Customer customer = new Customer();
         User user = null;
         DA da = new DA();
         Main m = new Main();
-
 
 
         Scanner scanner = new Scanner(System.in);
@@ -144,7 +59,7 @@ public class Main {
 
                 da.insertRecord(username, password);
 
-                inputCustDetail(customer,scanner);
+                inputCustDetail(customer, scanner);
 
             } else if (userOption == 1) {
                 Scanner scanner2 = new Scanner(System.in);
@@ -443,8 +358,9 @@ public class Main {
                             default:
                                 System.out.println("Invalid choice.");
                                 break;
-                        }}
-                    while (choice1 != 5) ;
+                        }
+                    }
+                    while (choice1 != 5);
                     break;
 
 
@@ -454,24 +370,32 @@ public class Main {
                     System.out.println("|     1. Make Reservation      |");
                     System.out.println("|     2. Modify Reservation    |");
                     System.out.println("|     3. Cancel Reservation    |");
-                    System.out.println("|     4. Exit                  |");
+                    System.out.println("|     4. Check Availability    |");
+                    System.out.println("|     5. Exit                  |");
                     System.out.println("================================\n");
                     System.out.print("Select your option : ");
                     int resinput = scanner.nextInt();
 
-                    switch (resinput){
+                    switch (resinput) {
                         case 1:
                             customer = MakeReservationProcess(hotels, rooms, customer);
                             break;
                         case 2:
-
+//                            ModifyReservation(customer, .getReservation());
                             break;
 
                         case 3:
+                            CancelReservation(customer);
+                            customer.removeReservation(customer.getReservation());
+//                            wallet.addFunds(customer, subtotal);
 
                             break;
 
                         case 4:
+                            checkRoomAvailability(customer, hotels, customer.getReservation());
+                            break;
+
+                        case 5:
                             break;
                         default:
                             System.out.println("Invalid Input");
@@ -480,7 +404,7 @@ public class Main {
                     break;
 
 
-                    //Choice
+                //Choice
                 case 3:
                     topupProcess(customer);
 
@@ -505,8 +429,8 @@ public class Main {
 
     }
 
-    static Customer MakeReservationProcess(ArrayList<Hotel> hotels ,
-                                       ArrayList<Room> rooms, Customer customer ) {
+    static Customer MakeReservationProcess(ArrayList<Hotel> hotels,
+                                           ArrayList<Room> rooms, Customer customer) {
         boolean validPax = true;
         boolean validDate = true;
         boolean validRoom = true;
@@ -636,7 +560,7 @@ public class Main {
 
                 System.out.println(j + ". " + roomType + " (Max Pax: " + room.getMaxPax() + ") - RM " + room.getPrice());
 
-                roomDisplay.add(new RoomDisplay(j, roomType,roomPrice));
+                roomDisplay.add(new RoomDisplay(j, roomType, roomPrice));
 
                 j++;
             }
@@ -728,19 +652,20 @@ public class Main {
         double actualAmountToPay = payment.getAmount();
 
 
-        System.out.printf("Thank you for visiting! \n" + payment + "\nPlease pay: RM" + actualAmountToPay+ "\n");
+        System.out.printf("Thank you for visiting! \n" + payment + "\nPlease pay: RM" + actualAmountToPay + "\n");
 
         balance = m.getPayment(actualAmountToPay);
 
         System.out.println("\n         *****************************");
         System.out.println("         |   Thank You For Booking   |");
         System.out.println("         *****************************");
+        reservation.setResId(resId);
+        resId++;
+        System.out.println(resId);
 
 
         return customer;
     }
-
-
 
     public static void Service(Hotel selectedHotel) {
         Scanner scan = new Scanner(System.in);
@@ -881,7 +806,7 @@ public class Main {
                                 tOrder.setQuantity(tQty);
                                 transOrders.add(new TransMenu(transMenuA[t - 1].getName(), tOrder.getPrice(), tQty));
                                 break;
-                            }  else
+                            } else
                                 System.out.println("Invalid input for transport service. Please choose between 1-4.");
                             validateTrans = true;
                         } catch (NumberFormatException e) {
@@ -914,7 +839,7 @@ public class Main {
                                 fOrder.setQuantity(fQty);
                                 foodOrders.add(new FoodMenu(foodMenuA[f - 1].getName(), fOrder.getPrice(), fQty));
                                 break;
-                            }  else
+                            } else
                                 System.out.println("Invalid input for food choice. Please choose between 1-4.");
                             validateFood = true;
                         } catch (NumberFormatException e) {
@@ -945,7 +870,7 @@ public class Main {
                                 bOrder.setQuantity(bQty);
                                 bevOrders.add(new BevMenu(bevMenuA[b - 1].getName(), bOrder.getPrice(), bQty));
                                 break;
-                            }  else
+                            } else
                                 System.out.println("Invalid input for beverage choice. Please choose between 1-4.");
                             validateBev = true;
                         } catch (NumberFormatException e) {
@@ -966,7 +891,7 @@ public class Main {
             for (int i = 0; i < transOrders.size(); i++) {
                 TransMenu transOrder = transOrders.get(i);
                 double transSubTotal = transOrder.order(transOrder.getQuantity(), transOrder.getPrice());
-                System.out.printf("%-4d%-20s %-2d %-1s RM%.2f %n", (i + 1), transOrder.getName(), transOrder.getQuantity(),"x", transSubTotal);
+                System.out.printf("%-4d%-20s %-2d %-1s RM%.2f %n", (i + 1), transOrder.getName(), transOrder.getQuantity(), "x", transSubTotal);
                 subTotal += transSubTotal;
             }
             System.out.println();
@@ -974,7 +899,7 @@ public class Main {
             for (int i = 0; i < foodOrders.size(); i++) {
                 FoodMenu foodOrder = foodOrders.get(i);
                 double foodSubTotal = foodOrder.order(foodOrder.getQuantity(), foodOrder.getPrice());
-                System.out.printf("%-4d%-20s %-2d %-1s RM%.2f %n", (i + 1), foodOrder.getName(), foodOrder.getQuantity(),"x", foodSubTotal);
+                System.out.printf("%-4d%-20s %-2d %-1s RM%.2f %n", (i + 1), foodOrder.getName(), foodOrder.getQuantity(), "x", foodSubTotal);
                 subTotal += foodSubTotal;
             }
             System.out.println();
@@ -982,11 +907,11 @@ public class Main {
             for (int i = 0; i < bevOrders.size(); i++) {
                 BevMenu bevOrder = bevOrders.get(i);
                 double bevSubTotal = bevOrder.order(bevOrder.getQuantity(), bevOrder.getPrice());
-                System.out.printf("%-4d%-20s %-2d %-1s RM%.2f %n", (i + 1), bevOrder.getName(), bevOrder.getQuantity(),"x", bevSubTotal);
+                System.out.printf("%-4d%-20s %-2d %-1s RM%.2f %n", (i + 1), bevOrder.getName(), bevOrder.getQuantity(), "x", bevSubTotal);
                 subTotal += bevSubTotal;
             }
             System.out.print("\n-------------Service Details----------------");
-            System.out.println("\nService Price   : RM" + String.format("%.2f",subTotal));
+            System.out.println("\nService Price   : RM" + String.format("%.2f", subTotal));
             System.out.print("--------------------------------------------");
             fd.setServiceSubtotal(subTotal);
 
@@ -1020,7 +945,7 @@ public class Main {
                                 tOrder.setQuantity(tQty);
                                 transOrders.add(new TransMenu(transMenuB[t - 1].getName(), tOrder.getPrice(), tQty));
                                 break;
-                            }  else
+                            } else
                                 System.out.println("Invalid input for transport service. Please choose between 1-4.");
                             validateTrans = true;
                         } catch (NumberFormatException e) {
@@ -1053,7 +978,7 @@ public class Main {
                                 fOrder.setQuantity(fQty);
                                 foodOrders.add(new FoodMenu(foodMenuB[f - 1].getName(), fOrder.getPrice(), fQty));
                                 break;
-                            }  else
+                            } else
                                 System.out.println("Invalid input for food choice. Please choose between 1-4.");
                             validateFood = true;
                         } catch (NumberFormatException e) {
@@ -1084,7 +1009,7 @@ public class Main {
                                 bOrder.setQuantity(bQty);
                                 bevOrders.add(new BevMenu(bevMenuB[b - 1].getName(), bOrder.getPrice(), bQty));
                                 break;
-                            }  else
+                            } else
                                 System.out.println("Invalid input for beverage choice. Please choose between 1-4.");
                             validateBev = true;
                         } catch (NumberFormatException e) {
@@ -1105,7 +1030,7 @@ public class Main {
             for (int i = 0; i < transOrders.size(); i++) {
                 TransMenu transOrder = transOrders.get(i);
                 double transSubTotal = transOrder.order(transOrder.getQuantity(), transOrder.getPrice());
-                System.out.printf("%-4d%-20s %-2d %-1s RM%.2f %n", (i + 1), transOrder.getName(), transOrder.getQuantity(),"x", transSubTotal);
+                System.out.printf("%-4d%-20s %-2d %-1s RM%.2f %n", (i + 1), transOrder.getName(), transOrder.getQuantity(), "x", transSubTotal);
                 subTotal += transSubTotal;
             }
             System.out.println();
@@ -1113,7 +1038,7 @@ public class Main {
             for (int i = 0; i < foodOrders.size(); i++) {
                 FoodMenu foodOrder = foodOrders.get(i);
                 double foodSubTotal = foodOrder.order(foodOrder.getQuantity(), foodOrder.getPrice());
-                System.out.printf("%-4d%-20s %-2d %-1s RM%.2f %n", (i + 1), foodOrder.getName(), foodOrder.getQuantity(),"x", foodSubTotal);
+                System.out.printf("%-4d%-20s %-2d %-1s RM%.2f %n", (i + 1), foodOrder.getName(), foodOrder.getQuantity(), "x", foodSubTotal);
                 subTotal += foodSubTotal;
             }
             System.out.println();
@@ -1121,11 +1046,11 @@ public class Main {
             for (int i = 0; i < bevOrders.size(); i++) {
                 BevMenu bevOrder = bevOrders.get(i);
                 double bevSubTotal = bevOrder.order(bevOrder.getQuantity(), bevOrder.getPrice());
-                System.out.printf("%-4d%-20s %-2d %-1s RM%.2f %n", (i + 1), bevOrder.getName(), bevOrder.getQuantity(),"x", bevSubTotal);
+                System.out.printf("%-4d%-20s %-2d %-1s RM%.2f %n", (i + 1), bevOrder.getName(), bevOrder.getQuantity(), "x", bevSubTotal);
                 subTotal += bevSubTotal;
             }
             System.out.print("\n-------------Service Details----------------");
-            System.out.println("\nService Price   : RM" + String.format("%.2f",subTotal));
+            System.out.println("\nService Price   : RM" + String.format("%.2f", subTotal));
             System.out.print("--------------------------------------------");
             fd.setServiceSubtotal(subTotal);
         } else if (hotelChoice.equals("Hard Rock Kuala Lumpur")) {
@@ -1158,7 +1083,7 @@ public class Main {
                                 tOrder.setQuantity(tQty);
                                 transOrders.add(new TransMenu(transMenuC[t - 1].getName(), tOrder.getPrice(), tQty));
                                 break;
-                            }  else
+                            } else
                                 System.out.println("Invalid input for transport service. Please choose between 1-4.");
                             validateTrans = true;
                         } catch (NumberFormatException e) {
@@ -1191,7 +1116,7 @@ public class Main {
                                 fOrder.setQuantity(fQty);
                                 foodOrders.add(new FoodMenu(foodMenuC[f - 1].getName(), fOrder.getPrice(), fQty));
                                 break;
-                            }  else
+                            } else
                                 System.out.println("Invalid input for food choice. Please choose between 1-4.");
                             validateFood = true;
                         } catch (NumberFormatException e) {
@@ -1222,7 +1147,7 @@ public class Main {
                                 bOrder.setQuantity(bQty);
                                 bevOrders.add(new BevMenu(bevMenuC[b - 1].getName(), bOrder.getPrice(), bQty));
                                 break;
-                            }  else
+                            } else
                                 System.out.println("Invalid input for beverage choice. Please choose between 1-4.");
                             validateBev = true;
                         } catch (NumberFormatException e) {
@@ -1243,7 +1168,7 @@ public class Main {
             for (int i = 0; i < transOrders.size(); i++) {
                 TransMenu transOrder = transOrders.get(i);
                 double transSubTotal = transOrder.order(transOrder.getQuantity(), transOrder.getPrice());
-                System.out.printf("%-4d%-20s %-2d %-1s RM%.2f %n", (i + 1), transOrder.getName(), transOrder.getQuantity(),"x", transSubTotal);
+                System.out.printf("%-4d%-20s %-2d %-1s RM%.2f %n", (i + 1), transOrder.getName(), transOrder.getQuantity(), "x", transSubTotal);
                 subTotal += transSubTotal;
             }
             System.out.println();
@@ -1251,7 +1176,7 @@ public class Main {
             for (int i = 0; i < foodOrders.size(); i++) {
                 FoodMenu foodOrder = foodOrders.get(i);
                 double foodSubTotal = foodOrder.order(foodOrder.getQuantity(), foodOrder.getPrice());
-                System.out.printf("%-4d%-20s %-2d %-1s RM%.2f %n", (i + 1), foodOrder.getName(), foodOrder.getQuantity(),"x", foodSubTotal);
+                System.out.printf("%-4d%-20s %-2d %-1s RM%.2f %n", (i + 1), foodOrder.getName(), foodOrder.getQuantity(), "x", foodSubTotal);
                 subTotal += foodSubTotal;
             }
             System.out.println();
@@ -1259,11 +1184,11 @@ public class Main {
             for (int i = 0; i < bevOrders.size(); i++) {
                 BevMenu bevOrder = bevOrders.get(i);
                 double bevSubTotal = bevOrder.order(bevOrder.getQuantity(), bevOrder.getPrice());
-                System.out.printf("%-4d%-20s %-2d %-1s RM%.2f %n", (i + 1), bevOrder.getName(), bevOrder.getQuantity(),"x", bevSubTotal);
+                System.out.printf("%-4d%-20s %-2d %-1s RM%.2f %n", (i + 1), bevOrder.getName(), bevOrder.getQuantity(), "x", bevSubTotal);
                 subTotal += bevSubTotal;
             }
             System.out.print("\n-------------Service Details----------------");
-            System.out.println("\nService Price   : RM" + String.format("%.2f",subTotal));
+            System.out.println("\nService Price   : RM" + String.format("%.2f", subTotal));
             System.out.print("--------------------------------------------");
             fd.setServiceSubtotal(subTotal);
         } else if (hotelChoice.equals("Sepang Resort")) {
@@ -1274,8 +1199,8 @@ public class Main {
                 String selection = scan.nextLine();
                 if (selection.equals("1")) {
                     System.out.println("Sepang Resort Hotel Transport Service");
-                    for (int i =0; i < transMenuD.length;i ++){
-                        System.out.printf("%-4d%-25sRM %.2f%n",i+1 ,   transMenuD[i].getName() ,  transMenuD[i].getPrice());
+                    for (int i = 0; i < transMenuD.length; i++) {
+                        System.out.printf("%-4d%-25sRM %.2f%n", i + 1, transMenuD[i].getName(), transMenuD[i].getPrice());
                     }
                     boolean validateTrans = true;
                     while (validateTrans) {
@@ -1295,7 +1220,7 @@ public class Main {
                                 tOrder.setQuantity(tQty);
                                 transOrders.add(new TransMenu(transMenuD[t - 1].getName(), tOrder.getPrice(), tQty));
                                 break;
-                            }  else
+                            } else
                                 System.out.println("Invalid input for transport service. Please choose between 1-4.");
                             validateTrans = true;
                         } catch (NumberFormatException e) {
@@ -1307,8 +1232,8 @@ public class Main {
 
                 } else if (selection.equals("2")) {
                     System.out.println("Sepang Resort Hotel Food Service");
-                    for (int i =0; i < foodMenuD.length;i ++){
-                        System.out.printf("%-4d%-25sRM %.2f%n",i+1 ,   foodMenuD[i].getName() ,  foodMenuD[i].getPrice());
+                    for (int i = 0; i < foodMenuD.length; i++) {
+                        System.out.printf("%-4d%-25sRM %.2f%n", i + 1, foodMenuD[i].getName(), foodMenuD[i].getPrice());
                     }
                     boolean validateFood = true;
                     while (validateFood) {
@@ -1328,7 +1253,7 @@ public class Main {
                                 fOrder.setQuantity(fQty);
                                 foodOrders.add(new FoodMenu(foodMenuD[f - 1].getName(), fOrder.getPrice(), fQty));
                                 break;
-                            }  else
+                            } else
                                 System.out.println("Invalid input for food choice. Please choose between 1-4.");
                             validateFood = true;
                         } catch (NumberFormatException e) {
@@ -1339,8 +1264,8 @@ public class Main {
                     }
                 } else if (selection.equals("3")) {
                     System.out.println("Sepang Resort Hotel Beverage Service");
-                    for (int i =0; i < bevMenuD.length;i ++){
-                        System.out.printf("%-4d%-25sRM %.2f%n",i+1 ,   bevMenuD[i].getName() ,  bevMenuD[i].getPrice());
+                    for (int i = 0; i < bevMenuD.length; i++) {
+                        System.out.printf("%-4d%-25sRM %.2f%n", i + 1, bevMenuD[i].getName(), bevMenuD[i].getPrice());
                     }
                     boolean validateBev = true;
                     while (validateBev) {
@@ -1359,7 +1284,7 @@ public class Main {
                                 bOrder.setQuantity(bQty);
                                 bevOrders.add(new BevMenu(bevMenuD[b - 1].getName(), bOrder.getPrice(), bQty));
                                 break;
-                            }  else
+                            } else
                                 System.out.println("Invalid input for beverage choice. Please choose between 1-4.");
                             validateBev = true;
                         } catch (NumberFormatException e) {
@@ -1380,7 +1305,7 @@ public class Main {
             for (int i = 0; i < transOrders.size(); i++) {
                 TransMenu transOrder = transOrders.get(i);
                 double transSubTotal = transOrder.order(transOrder.getQuantity(), transOrder.getPrice());
-                System.out.printf("%-4d%-20s %-2d %-1s RM%.2f %n", (i + 1), transOrder.getName(), transOrder.getQuantity(),"x", transSubTotal);
+                System.out.printf("%-4d%-20s %-2d %-1s RM%.2f %n", (i + 1), transOrder.getName(), transOrder.getQuantity(), "x", transSubTotal);
                 subTotal += transSubTotal;
             }
             System.out.println();
@@ -1388,7 +1313,7 @@ public class Main {
             for (int i = 0; i < foodOrders.size(); i++) {
                 FoodMenu foodOrder = foodOrders.get(i);
                 double foodSubTotal = foodOrder.order(foodOrder.getQuantity(), foodOrder.getPrice());
-                System.out.printf("%-4d%-20s %-2d %-1s RM%.2f %n", (i + 1), foodOrder.getName(), foodOrder.getQuantity(),"x", foodSubTotal);
+                System.out.printf("%-4d%-20s %-2d %-1s RM%.2f %n", (i + 1), foodOrder.getName(), foodOrder.getQuantity(), "x", foodSubTotal);
                 subTotal += foodSubTotal;
             }
             System.out.println();
@@ -1396,11 +1321,11 @@ public class Main {
             for (int i = 0; i < bevOrders.size(); i++) {
                 BevMenu bevOrder = bevOrders.get(i);
                 double bevSubTotal = bevOrder.order(bevOrder.getQuantity(), bevOrder.getPrice());
-                System.out.printf("%-4d%-20s %-2d %-1s RM%.2f %n", (i + 1), bevOrder.getName(), bevOrder.getQuantity(),"x", bevSubTotal);
+                System.out.printf("%-4d%-20s %-2d %-1s RM%.2f %n", (i + 1), bevOrder.getName(), bevOrder.getQuantity(), "x", bevSubTotal);
                 subTotal += bevSubTotal;
             }
 
-            System.out.println("Thank you for ordering services. \nTotal Amount for services is RM " + String.format("%.2f",subTotal));
+            System.out.println("Thank you for ordering services. \nTotal Amount for services is RM " + String.format("%.2f", subTotal));
             fd.setServiceSubtotal(subTotal);
 
 
@@ -1412,8 +1337,8 @@ public class Main {
                 String selection = scan.nextLine();
                 if (selection.equals("1")) {
                     System.out.println("Le Meridien Kuala Lumpur Transport Service");
-                    for (int i =0; i < transMenuE.length;i ++){
-                        System.out.printf("%-4d%-25sRM %.2f%n",i+1 ,   transMenuE[i].getName() ,  transMenuE[i].getPrice());
+                    for (int i = 0; i < transMenuE.length; i++) {
+                        System.out.printf("%-4d%-25sRM %.2f%n", i + 1, transMenuE[i].getName(), transMenuE[i].getPrice());
                     }
                     boolean validateTrans = true;
                     while (validateTrans) {
@@ -1434,7 +1359,7 @@ public class Main {
                                 tOrder.setQuantity(tQty);
                                 transOrders.add(new TransMenu(transMenuE[t - 1].getName(), tOrder.getPrice(), tQty));
                                 break;
-                            }  else
+                            } else
                                 System.out.println("Invalid input for transport service. Please choose between 1-4.");
                             validateTrans = true;
                         } catch (NumberFormatException e) {
@@ -1446,8 +1371,8 @@ public class Main {
 
                 } else if (selection.equals("2")) {
                     System.out.println("Le Meridien Kuala Lumpur Hotel Food Service");
-                    for (int i =0; i < foodMenuE.length;i ++){
-                        System.out.printf("%-4d%-25sRM %.2f%n",i+1 ,   foodMenuE[i].getName() ,  foodMenuE[i].getPrice());
+                    for (int i = 0; i < foodMenuE.length; i++) {
+                        System.out.printf("%-4d%-25sRM %.2f%n", i + 1, foodMenuE[i].getName(), foodMenuE[i].getPrice());
                     }
                     boolean validateFood = true;
                     while (validateFood) {
@@ -1467,7 +1392,7 @@ public class Main {
                                 fOrder.setQuantity(fQty);
                                 foodOrders.add(new FoodMenu(foodMenuE[f - 1].getName(), fOrder.getPrice(), fQty));
                                 break;
-                            }  else
+                            } else
                                 System.out.println("Invalid input for food choice. Please choose between 1-4.");
                             validateFood = true;
                         } catch (NumberFormatException e) {
@@ -1478,8 +1403,8 @@ public class Main {
                     }
                 } else if (selection.equals("3")) {
                     System.out.println("Le Meridien Kuala Lumpur Hotel Beverage Service");
-                    for (int i =0; i < bevMenuE.length;i ++){
-                        System.out.printf("%-4d%-25sRM %.2f%n",i+1 ,   bevMenuE[i].getName() ,  bevMenuE[i].getPrice());
+                    for (int i = 0; i < bevMenuE.length; i++) {
+                        System.out.printf("%-4d%-25sRM %.2f%n", i + 1, bevMenuE[i].getName(), bevMenuE[i].getPrice());
                     }
                     boolean validateBev = true;
                     while (validateBev) {
@@ -1498,7 +1423,7 @@ public class Main {
                                 bOrder.setQuantity(bQty);
                                 bevOrders.add(new BevMenu(bevMenuE[b - 1].getName(), bOrder.getPrice(), bQty));
                                 break;
-                            }  else
+                            } else
                                 System.out.println("Invalid input for beverage choice. Please choose between 1-4.");
                             validateBev = true;
                         } catch (NumberFormatException e) {
@@ -1519,7 +1444,7 @@ public class Main {
             for (int i = 0; i < transOrders.size(); i++) {
                 TransMenu transOrder = transOrders.get(i);
                 double transSubTotal = transOrder.order(transOrder.getQuantity(), transOrder.getPrice());
-                System.out.printf("%-4d%-20s %-2d %-1s RM%.2f %n", (i + 1), transOrder.getName(), transOrder.getQuantity(),"x", transSubTotal);
+                System.out.printf("%-4d%-20s %-2d %-1s RM%.2f %n", (i + 1), transOrder.getName(), transOrder.getQuantity(), "x", transSubTotal);
                 subTotal += transSubTotal;
             }
             System.out.println();
@@ -1527,7 +1452,7 @@ public class Main {
             for (int i = 0; i < foodOrders.size(); i++) {
                 FoodMenu foodOrder = foodOrders.get(i);
                 double foodSubTotal = foodOrder.order(foodOrder.getQuantity(), foodOrder.getPrice());
-                System.out.printf("%-4d%-20s %-2d %-1s RM%.2f %n", (i + 1), foodOrder.getName(), foodOrder.getQuantity(),"x", foodSubTotal);
+                System.out.printf("%-4d%-20s %-2d %-1s RM%.2f %n", (i + 1), foodOrder.getName(), foodOrder.getQuantity(), "x", foodSubTotal);
                 subTotal += foodSubTotal;
             }
             System.out.println();
@@ -1535,11 +1460,11 @@ public class Main {
             for (int i = 0; i < bevOrders.size(); i++) {
                 BevMenu bevOrder = bevOrders.get(i);
                 double bevSubTotal = bevOrder.order(bevOrder.getQuantity(), bevOrder.getPrice());
-                System.out.printf("%-4d%-20s %-2d %-1s RM%.2f %n", (i + 1), bevOrder.getName(), bevOrder.getQuantity(),"x", bevSubTotal);
+                System.out.printf("%-4d%-20s %-2d %-1s RM%.2f %n", (i + 1), bevOrder.getName(), bevOrder.getQuantity(), "x", bevSubTotal);
                 subTotal += bevSubTotal;
             }
             System.out.print("\n-------------Service Details----------------");
-            System.out.println("\nService Price   : RM" + String.format("%.2f",subTotal));
+            System.out.println("\nService Price   : RM" + String.format("%.2f", subTotal));
             System.out.print("--------------------------------------------");
 
             fd.setServiceSubtotal(subTotal);
@@ -1549,10 +1474,11 @@ public class Main {
         }
 
     }
-    public static void displayServiceMenu(){
+
+    public static void displayServiceMenu() {
         System.out.println();
         System.out.println("""
-                
+                                
                   ______   ________  _______  ____   ____  _____   ______  ________   ____    ____  ________  ____  _____  _____  _____ \s
                 .' ____ \\ |_   __  ||_   __ \\|_  _| |_  _||_   _|.' ___  ||_   __  | |_   \\  /   _||_   __  ||_   \\|_   _||_   _||_   _|\s
                 | (___ \\_|  | |_ \\_|  | |__) | \\ \\   / /    | | / .'   \\_|  | |_ \\_|   |   \\/   |    | |_ \\_|  |   \\ | |    | |    | |  \s
@@ -1561,14 +1487,28 @@ public class Main {
                  \\______.'|________||____| |___|  \\_/     |_____|`.____ .'|________| |_____||_____||________||_____|\\____|    `.__.'    \s
                                                                                                                                         \s
                 """);
-        System.out.printf("%78s","=====================================================\n");
-        System.out.printf("%79s","                  1.Transport Menu                   \n");
-        System.out.printf("%79s","                  2.Foods Menu                       \n");
-        System.out.printf("%79s","                  3.Beverage Menu                    \n");
-        System.out.printf("%79s","                  4.Exit                             \n");
-        System.out.printf("%78s","=====================================================\n");
-        System.out.printf("%70s","            PLEASE SELECT THE MENU CATEGORY          \n");
+        System.out.printf("%78s", "=====================================================\n");
+        System.out.printf("%79s", "                  1.Transport Menu                   \n");
+        System.out.printf("%79s", "                  2.Foods Menu                       \n");
+        System.out.printf("%79s", "                  3.Beverage Menu                    \n");
+        System.out.printf("%79s", "                  4.Exit                             \n");
+        System.out.printf("%78s", "=====================================================\n");
+        System.out.printf("%70s", "            PLEASE SELECT THE MENU CATEGORY          \n");
     }
+
+//    private double calculateNewTotalPayment(){
+//        double originalTotalPayment = customer.getReservation().get(lastIndex).calTotalRoomPrice();
+//        double modifiedTotalPayment = originalTotalPayment;
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//    }
 
     public static void topupProcess(Customer customer) { // use this for topUp
         boolean validtopup = true;
@@ -1593,29 +1533,29 @@ public class Main {
                     System.out.println("\n-------Top Up Successful-------");
 
                     System.out.println("==============================");
-                    System.out.println("Current balance : RM" + customer.getBalance() );
+                    System.out.println("Current balance : RM" + customer.getBalance());
                     System.out.println("==============================");
-                    if (wallet.getToupAmount() >= 2000){
+                    if (wallet.getToupAmount() >= 2000) {
                         member.setTier("Diamond");
                         member.setPoints(wallet.getToupAmount());
                         System.out.println("Congratulation! You achieve " + member.getTier() + " tier now.");
-                        System.out.println("You can now enjoy " + member.getDiscount() *100 + "% discount for you payment.");
+                        System.out.println("You can now enjoy " + member.getDiscount() * 100 + "% discount for you payment.");
                     } else if (wallet.getToupAmount() >= 1500) {
                         member.setTier("Gold");
                         member.setPoints(wallet.getToupAmount());
                         System.out.println("Congratulation! You achieve " + member.getTier() + " tier now.");
-                        System.out.println("You can now enjoy " + member.getDiscount() *100 + "% discount for you payment.");
-                    }else if(wallet.getToupAmount() >= 1000){
+                        System.out.println("You can now enjoy " + member.getDiscount() * 100 + "% discount for you payment.");
+                    } else if (wallet.getToupAmount() >= 1000) {
                         member.setTier("Silver");
                         member.setPoints(wallet.getToupAmount());
                         System.out.println("Congratulation! You achieve " + member.getTier() + " tier now.");
-                        System.out.println("You can now enjoy " + member.getDiscount() *100 + "% discount for you payment.");
-                    }else if(wallet.getToupAmount() >= 500){
+                        System.out.println("You can now enjoy " + member.getDiscount() * 100 + "% discount for you payment.");
+                    } else if (wallet.getToupAmount() >= 500) {
                         member.setTier("Bronze");
                         member.setPoints(wallet.getToupAmount());
                         System.out.println("Congratulation! You achieve " + member.getTier() + " tier now.");
-                        System.out.println("You can now enjoy " + member.getDiscount() *100 + "% discount for you payment.");
-                    }else {
+                        System.out.println("You can now enjoy " + member.getDiscount() * 100 + "% discount for you payment.");
+                    } else {
                         member.setTier("Non");
                     }
                     validtopup = true;
@@ -1632,7 +1572,7 @@ public class Main {
         } while (validtopup == false);
     }
 
-    public static void inputCustDetail(Customer customer, Scanner input){
+    public static void inputCustDetail(Customer customer, Scanner input) {
 
         boolean validIC = true;
         boolean validContact = true;
@@ -1693,7 +1633,7 @@ public class Main {
                     customer.setContact(contact);
                     validContact = true;
                 } else {
-                    throw new IllegalArgumentException("\nInvalid contact number. Please enter you contact with dash.ln");
+                    throw new IllegalArgumentException("\nInvalid contact number. Please enter you contact with dash.\n");
                 }
             } catch (IllegalArgumentException e) {
                 System.out.println(e.getMessage());
@@ -1720,7 +1660,7 @@ public class Main {
 
     }
 
-    public static void DisplayProfile(Customer customer){
+    public static void DisplayProfile(Customer customer) {
 
         //Display header
         System.out.println("=======================================================");
@@ -1742,4 +1682,424 @@ public class Main {
         System.out.println("Account Balance : " + customer.getBalance());
         System.out.println("=======================================================");
     }
+
+    public static void CancelReservation(Customer customer) {
+        Scanner scanner = new Scanner(System.in);
+
+        while (true) {
+            printMenu();
+            System.out.print("                              Enter CustomerID: ");
+            String custId = scanner.next();
+
+            String customerID = customer.getCustId();
+            if (customerID == null) {
+                System.out.println("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
+                System.out.println("                              Invalid CustomerID. No reservations found.");
+                System.out.println("                              Please try again.");
+                continue;
+            }
+
+            ArrayList<Reservation> customerReservations = customer.getReservation();
+
+            System.out.println("Customer's Bookings:");
+            for (int i = 0; i < customerReservations.size(); i++) {
+                Reservation reservation = customerReservations.get(i);
+                System.out.println((i + 1) + ". Reservation ID: " + reservation.getResId());
+            }
+
+            System.out.println("0. Exit");
+
+            System.out.print("Select a booking to cancel (enter the number or 0 to exit): ");
+            int selectedBookingIndex = scanner.nextInt();
+
+            if (selectedBookingIndex == 0) {
+                System.out.println("==================================");
+                System.out.println("Reservation cancellation aborted.");
+                System.out.println("==================================");
+                return;
+            }
+
+            if (selectedBookingIndex < 1 || selectedBookingIndex > customerReservations.size()) {
+                System.out.println("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
+                System.out.println("                           Invalid selection. Please try again.");
+                continue;
+            }
+
+            Reservation selectedReservation = customerReservations.get(selectedBookingIndex - 1);
+
+            System.out.print("Are you sure you want to cancel booking ID "
+                    + selectedReservation.getResId() + "? (Y/N): ");
+            String confirmation = scanner.next();
+
+
+
+            if (confirmation.equalsIgnoreCase("Y")) {
+                customerReservations.remove(selectedBookingIndex - 1);
+                System.out.println("==================================");
+                System.out.println("Reservation canceled successfully.");
+                System.out.println("==================================");
+
+
+            } else {
+                System.out.println("==================================");
+                System.out.println("Reservation cancellation aborted.");
+                System.out.println("==================================");
+            }
+
+            break;
+        }
+    }
+
+    private static void printMenu() {
+        System.out.println("  _____          _   _  _____ ______ _            _______ _____ ____  _   _");
+        System.out.println(" / ____|   /\\   | \\ | |/ ____|  ____| |        /\\|__   __|_   _/ __ \\| \\ | |");
+        System.out.println("| |       /  \\  |  \\| | |    | |__  | |       /  \\  | |    | || |  | |  \\| |");
+        System.out.println("| |      / /\\ \\ | . ` | |    |  __| | |      / /\\ \\ | |    | || |  | | . ` |");
+        System.out.println("| |____ / ____ \\| |\\  | |____| |____| |____ / ____ \\| |   _| || |__| | |\\  |");
+        System.out.println(" \\_____/_/    \\_\\_| \\_|\\_____|______|______/_/    \\_\\_|  |_____\\____/|_| \\_|\n");
+        System.out.println("-----------------------------------------------------------------------------------");
+    }
+
+    private static void printModify() {
+        System.out.println("****************************************************************************************");
+        System.out.println("*               __  __  ____  _____ _____ ________     __                              *");
+        System.out.println("*              |  \\/  |/ __ \\|  __ \\_   _|  ____\\ \\   / /                              *");
+        System.out.println("*              | \\  / | |  | | |  | || | | |__   \\ \\_/ /                               *");
+        System.out.println("*              | |\\/| | |  | | |  | || | |  __|   \\   /                                *");
+        System.out.println("*              | |  | | |__| | |__| || |_| |       | |                                 *");
+        System.out.println("*  _____  _____|_|__|_|\\____/|_____/_____|_|__  ___|_|_ _____ ____  _   _              *");
+        System.out.println("* |  __ \\|  ____|/ ____|  ____|  __ \\ \\    / /\\|__   __|_   _/ __ \\| \\ | |             *");
+        System.out.println("* | |__) | |__  | (___ | |__  | |__) \\ \\  / /  \\  | |    | || |  | |  \\| |             *");
+        System.out.println("* |  _  /|  __|  \\___ \\|  __| |  _  / \\ \\/ / /\\ \\ | |    | || |  | | . ` |             *");
+        System.out.println("* | | \\ \\| |____ ____) | |____| | \\ \\  \\  / ____ \\| |   _| || |__| | |\\  |             *");
+        System.out.println("* |_|  \\_\\______|_____/|______|_|  \\_\\  \\/_/    \\_\\_|  |_____|\\____/|_| \\_|            *");
+        System.out.println("****************************************************************************************");
+    }
+
+    public static void checkRoomAvailability( Customer customer, ArrayList<Hotel> hotels, ArrayList<Reservation> reservations) {
+
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("                                   __      __     _____ _               ____ _____ _      _____ _________     __\n"
+                + "                                  /\\ \\    / /\\   |_   _| |        /\\   |  _ \\_   _| |    |_   _|__   __\\ \\   / /\n"
+                + "                                 /  \\ \\  / /  \\    | | | |       /  \\  | |_) || | | |      | |    | |   \\ \\_/ / \n"
+                + "                                / /\\ \\ \\/ / /\\ \\   | | | |      / /\\ \\ |  _ < | | | |      | |    | |    \\   /  \n"
+                + "                               / ____ \\  / ____ \\ _| |_| |____ / ____ \\| |_) || |_| |____ _| |_   | |     | |   \n"
+                + "                              /_/    \\_\\/_/    \\_\\_____|______/_/    \\_\\____/_____|______|_____|  |_|     |_|   \n"
+                + "                                                                                                                \n");
+
+        LocalDate checkInDate = null;
+        while (checkInDate == null) {
+            System.out.print("                  Enter the check-in date (yyyy-MM-dd): ");
+            String checkInDateStr = scanner.nextLine();
+
+            try {
+                checkInDate = LocalDate.parse(checkInDateStr, DateTimeFormatter.ISO_DATE);
+
+                if (checkInDate.isBefore(LocalDate.of(2023, 6, 1)) || checkInDate.isAfter(LocalDate.of(2023, 6, 7))) {
+                    printError();
+                    System.out.println("                                Invalid check-in date. Please enter a date between 2023-06-01 and 2023-06-07.");
+                    checkInDate = null;
+                }
+            } catch (DateTimeParseException e) {
+                printError();
+                System.out.println("                                Invalid date format. Please enter the date in the format yyyy-MM-dd.");
+            }
+        }
+
+        LocalDate checkOutDate = null;
+        while (checkOutDate == null) {
+            System.out.print("                  Enter the check-out date (yyyy-MM-dd): ");
+            String checkOutDateStr = scanner.nextLine();
+
+            try {
+                checkOutDate = LocalDate.parse(checkOutDateStr, DateTimeFormatter.ISO_DATE);
+
+                if (checkOutDate.isBefore(checkInDate) || checkOutDate.isAfter(checkInDate.plusDays(6))) {
+                    printError();
+                    System.out.println("                                Invalid check-out date. Please enter a date between " + checkInDate.plusDays(1).toString() + " and " + checkInDate.plusDays(7).toString() + ".");
+                    checkOutDate = null;
+                }
+            } catch (DateTimeParseException e) {
+                printError();
+                System.out.println("                                Invalid date format. Please enter the date in the format yyyy-MM-dd.");
+            }
+        }
+        System.out.println("                                    _               _                    _ _       _     _ _ _ _         \n"
+                + "                                   | |             | |                  (_) |     | |   (_) (_) |        \n"
+                + "                                ___| |__   ___  ___| | ____ ___   ____ _ _| | __ _| |__  _| |_| |_ _   _ \n"
+                + "                               / __| '_ \\ / _ \\/ __| |/ / _` \\ \\ / / _` | | |/ _` | '_ \\| | | | __| | | |\n"
+                + "                              | (__| | | |  __/ (__|   < (_| |\\ V / (_| | | | (_| | |_) | | | | |_| |_| |\n"
+                + "                               \\___|_| |_|\\___|\\___|_|\\_\\__,_| \\_/ \\__,_|_|_|\\__,_|_.__/|_|_|_|\\__|\\__, |\n"
+                + "                                                                                                    __/ |\n"
+                + "                                                                                                   |___/ ");
+
+        for (int i = 0; i < hotels.size(); i++) {
+            System.out.println("                   " + (i + 1) + ". " + hotels.get(i));
+            ArrayList<Room> rooms = hotels.get(i).getRooms();
+            for (int j = 0; j < rooms.size(); j++) {
+                System.out.println("                      " + (j + 1) + ". " + rooms.get(j).getRoomType());
+            }
+        }
+
+        int hotelIndex;
+        do {
+            System.out.print("                                              Select a hotel (1-" + hotels.size() + "): ");
+            hotelIndex = scanner.nextInt();
+            scanner.nextLine();
+
+            if (hotelIndex < 1 || hotelIndex > hotels.size()) {
+                System.out.println("                        Invalid hotel selection. Please enter a number between 1 and " + hotels.size() + ".");
+            }
+        } while (hotelIndex < 1 || hotelIndex > hotels.size());
+
+        int roomIndex;
+        do {
+            System.out.print("                                              Select a room type (1-" + hotels.get(hotelIndex - 1).getRooms().size() + "): ");
+            roomIndex = scanner.nextInt();
+            scanner.nextLine();
+
+            if (roomIndex < 1 || roomIndex > hotels.get(hotelIndex - 1).getRooms().size()) {
+                System.out.println("                        Invalid room selection. Please enter a number between 1 and " + hotels.get(hotelIndex - 1).getRooms().size() + ".");
+            }
+        } while (roomIndex < 1 || roomIndex > hotels.get(hotelIndex - 1).getRooms().size());
+
+        boolean fullyBooked = false;
+        for (Reservation reservation : reservations) {
+            if (reservation.getCheckindate().isBefore(checkOutDate) && reservation.getCheckoutdate().isAfter(checkInDate)) {
+                Hotel reservedHotel = reservation.getHotel();
+                Room reservedRoom = reservation.getRoom();
+
+                if (reservedHotel.equals(hotels.get(hotelIndex - 1)) && reservedRoom.equals(hotels.get(hotelIndex - 1).getRooms().get(roomIndex - 1))) {
+                    fullyBooked = true;
+                    break;
+                }
+            }
+        }
+
+        if (fullyBooked) {
+            System.out.println("                                        =================================================");
+            System.out.println("                                        The room is fully booked for the requested dates.");
+            System.out.println("                                        =================================================");
+        } else {
+            System.out.println("                                        ==============================================");
+            System.out.println("                                        The room is available for the requested dates.");
+            System.out.println("                                        ==============================================");
+        }
+
+    }
+
+//    public static Customer ModifyReservation(Customer customer, Reservation reservation) {
+//        Scanner scanner = new Scanner(System.in);
+//
+//        printModify();
+//        System.out.print("Enter the reservation ID : ");
+//        String ResId = scanner.next();
+//        int ReservationId = reservation.getResId();
+//        scanner.nextLine();
+//
+//
+//        if (Integer.parseInt(ResId) == ReservationId) {
+//
+//            boolean validChoice = false;
+//            while (!validChoice) {
+//                System.out.println("\nSelect an option to modify:");
+//                System.out.println("1. Check-in Date");
+//                System.out.println("2. Check-out Date");
+//                System.out.println("3. Cancel");
+//                System.out.print("Enter your choice: ");
+//                int choice = scanner.nextInt();
+//
+////
+//                switch (choice) {
+//                    case 1:
+//                        System.out.print("Enter the new check-in date (YYYY-MM-DD):");
+//                        String checkInDateString = scanner.nextLine();
+//                        LocalDate newCheckInDate = LocalDate.parse(checkInDateString);
+//                        reservation.setCheckindate(newCheckInDate);
+//                        System.out.println("          Reservation modified successfully.");
+//                        validChoice = true;
+//                        break;
+//                    case 2:
+//                        System.out.print("Enter the new check-out date (YYYY-MM-DD):");
+//                        String checkOutDateString = scanner.nextLine();
+//                        LocalDate checkOutDate = LocalDate.parse(checkOutDateString);
+//                        reservation.setCheckoutdate(checkOutDate);
+//                        System.out.println("          Reservation modified successfully.");
+//                        validChoice = true;
+//                        break;
+//                    case 3:
+//                        validChoice = true;
+//                        System.out.println("Modification canceled.");
+//                        break;
+//                    default:
+//                        System.out.println("Invalid choice. No modifications made.");
+//                        break;
+//                }
+//
+//            }
+//            System.out.println("\nUpdated Reservation Summary:");
+//            System.out.println("=============================");
+//            System.out.println(reservation);
+//            customer.addReservation(reservation);
+//
+//        } else {
+//            System.out.println("Invalid reservation ID. No modifications made.");
+//        }
+//        return customer;
+//    }
+
+
+//    private static LocalDate readValidCheckInDate (Scanner scanner, LocalDate currentCheckOutDate, Reservation reservation){
+//        LocalDate date = null;
+//        boolean validDate = false;
+//        LocalDate minDate = LocalDate.parse("2023-06-01");
+//
+//        while (!validDate) {
+//            String input = scanner.nextLine();
+//            try {
+//                date = LocalDate.parse(input);
+//                if (date.isEqual(reservation.getCheckindate())) {
+//                    System.out.println("The new check-in date cannot be the same as the old check-in date.");
+//                    System.out.print("Please enter a different date: ");
+//                    continue;
+//                }
+//                if (date.isEqual(minDate) || (date.isAfter(minDate) && date.isBefore(currentCheckOutDate))) {
+//                    validDate = true;
+//                } else {
+//                    System.out.println("Invalid date. Please enter a date between " + minDate + " and the current check-out date (" + currentCheckOutDate + ").");
+//                    System.out.print("Please enter a different date: ");
+//                }
+//            } catch (DateTimeParseException e) {
+//                System.out.println("Invalid date format. Please enter the date in the format YYYY-MM-DD.");
+//                System.out.print("Please enter a different date: ");
+//            }
+//        }
+//        return date;
+//    }
+//
+//    private static LocalDate readValidCheckOutDate (Scanner scanner, LocalDate currentCheckInDate, Reservation reservation){
+//        LocalDate date = null;
+//        boolean validDate = false;
+//        LocalDate maxDate = LocalDate.parse("2023-06-07");
+//
+//        while (!validDate) {
+//            String input = scanner.nextLine();
+//            try {
+//                date = LocalDate.parse(input);
+//                if (date.isEqual(reservation.getCheckoutdate())) {
+//                    System.out.println("The new check-out date cannot be the same as the old check-out date.");
+//                    System.out.print("Please enter a different date: ");
+//                    continue;
+//                }
+//                if (date.isEqual(maxDate) || (date.isAfter(currentCheckInDate) && date.isBefore(maxDate))) {
+//                    validDate = true;
+//                } else {
+//                    System.out.println("Invalid date. Please enter a date between the current check-in date (" + currentCheckInDate + ") and " + maxDate + ".");
+//                    System.out.print("Please enter a different date: ");
+//                }
+//            } catch (DateTimeParseException e) {
+//                System.out.println("Invalid date format. Please enter the date in the format YYYY-MM-DD.");
+//                System.out.print("Please enter a different date: ");
+//            }
+//        }
+//        return date;
+//    }
+
+    private static void printError() {
+        System.out.println("                              ________ _______    _______     ___  _______     \n"
+                + "                             |_   __  |_   __ \\  |_   __ \\  .'   `|_   __ \\    \n"
+                + "                               | |_ \\_| | |__) |   | |__) |/  .-.  \\| |__) |   \n"
+                + "                               |  _| _  |  __ /    |  __ / | |   | ||  __ /    \n"
+                + "                              _| |__/ |_| |  \\ \\_ _| |  \\ \\\\  `-'  _| |  \\ \\_  \n"
+                + "                             |________|____| |___|____| |___`.___.|____| |___| \n"
+                + "                                                                               \n");
+    }
+
+    public double getPayment(double subtotal) {
+        Scanner scanner = new Scanner(System.in);
+        double userPayment;
+        double balance = 0;
+
+        do {
+
+            if (balance < 0) {
+                System.out.println("Insufficient payment! Please pay the correct value!");
+            } else {
+                System.out.print("Please Enter Your Payment: ");
+            }
+            userPayment = scanner.nextDouble();
+            balance = userPayment - subtotal;
+        } while (balance < 0);
+
+        System.out.println("Thanks for the payment! ! !");
+        System.out.printf("Here's your balance: RM %.2f", balance);
+
+        return balance;
+    }
+
+    public Payment paymentMethods(Customer customer, double subtotal, double total) {
+        Payment payment = null;
+        String method;
+        Scanner scanner = new Scanner(System.in);
+        int paymentMethod;
+        System.out.println("total variable:" + total);
+        do {
+            System.out.println("1. Cash");
+            System.out.println("2. Credit Card");
+            System.out.println("3. eWallet");
+            System.out.print("Select the payment method: ");
+            paymentMethod = scanner.nextInt();
+
+            while (paymentMethod < 1 || paymentMethod > 3) {
+                System.out.println("Invalid input! Please enter 1, 2, or 3 only.");
+                System.out.print("Select the payment method: ");
+                paymentMethod = scanner.nextInt();
+            }
+            switch (paymentMethod) {
+                case 1:
+                    payment = new CashPayment(total);
+                    break;
+                case 2:
+                    payment = new CreditCardPayment(total);
+                    break;
+                case 3:
+                    payment = new Wallet(total); //123
+
+                    break;
+                default:
+                    System.out.println("Invalid payment method selected.");
+            }
+
+
+        } while (paymentMethod < 1 || paymentMethod > 3);
+
+        payment.processPayment();
+        while (customer.getBalance() < total) {
+            System.out.println("Uh Oh, Insufficient Balance. Proceeding to TopUp Page...");
+            scanner.nextLine();
+            topupProcess(customer);
+            total = subtotal * member.getDiscount();
+            System.out.printf("Initial amount to pay: RM %.2f\n", subtotal);
+
+            if (member.getDiscount() > 0) {
+                System.out.printf("Member discount: RM %.2f\n", subtotal * member.getDiscount());
+            }
+
+            total = subtotal * (1 - member.getDiscount());
+
+            System.out.printf("Amount to pay: RM %.2f\n", total);
+        }
+
+        payment.setAmount(total);
+
+        return payment;
+    }
+
 }
+
+
+
+
+
+
+
