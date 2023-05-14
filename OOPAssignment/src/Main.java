@@ -460,10 +460,13 @@ public class Main {
                             customer = MakeReservationProcess(hotels, rooms, customer);
                             break;
                         case 2:
-                            break;
+
+                        break;
 
                         case 3:
+
                             break;
+
                         case 4:
                             break;
                         default:
@@ -732,6 +735,7 @@ public class Main {
 
         return customer;
     }
+
 
 
     public static void Service(Hotel selectedHotel) {

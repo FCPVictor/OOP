@@ -15,38 +15,20 @@ public class ModifyReservation {
         return reservation;
     }
 
-
-
-
     public void modifyCheckInDate(LocalDate checkInDate) {
-        LocalDate currentCheckInDate = reservation.getCheckindate();
-        LocalDate currentCheckOutDate = reservation.getCheckoutdate();
-
-        int currentNumOfDays = (int) (currentCheckOutDate.toEpochDay() - currentCheckInDate.toEpochDay()) + 1;
-
-        int numOfDays = (int) (currentCheckOutDate.toEpochDay() - checkInDate.toEpochDay()) + 1;
-        double pricePerDay = reservation.getRoom().getPrice();
-        double additionalCost = (numOfDays - currentNumOfDays) * pricePerDay;
-
         reservation.setCheckindate(checkInDate);
         reservation.calNumDays();
         reservation.calTotalRoomPrice();
     }
 
     public void modifyCheckOutDate(LocalDate checkOutDate) {
-        LocalDate currentCheckInDate = reservation.getCheckindate();
-        LocalDate currentCheckOutDate = reservation.getCheckoutdate();
-
-        int currentNumOfDays = (int) (currentCheckOutDate.toEpochDay() - currentCheckInDate.toEpochDay()) + 1;
-
-        int numOfDays = (int) (checkOutDate.toEpochDay() - currentCheckInDate.toEpochDay()) + 1;
-        double pricePerDay = reservation.getRoom().getPrice();
-        double additionalCost = (numOfDays - currentNumOfDays) * pricePerDay;
 
         reservation.setCheckoutdate(checkOutDate);
         reservation.calNumDays();
         reservation.calTotalRoomPrice();
     }
+
+
 
     public void makeChanges() {
         Scanner scanner = new Scanner(System.in);
@@ -64,11 +46,13 @@ public class ModifyReservation {
                 System.out.print("Enter the new check-in date (YYYY-MM-DD):");
                 LocalDate newCheckInDate = readValidCheckInDate(scanner, reservation.getCheckoutdate());
                 modifyCheckInDate(newCheckInDate);
+                System.out.println("          Reservation modified successfully.");
                 break;
             case 2:
                 System.out.print("Enter the new check-out date (YYYY-MM-DD):");
                 LocalDate newCheckOutDate = readValidCheckOutDate(scanner, reservation.getCheckindate());
                 modifyCheckOutDate(newCheckOutDate);
+                System.out.println("          Reservation modified successfully.");
                 break;
 
             default:
@@ -76,7 +60,7 @@ public class ModifyReservation {
                 break;
         }
 
-        System.out.println("Reservation modified successfully.");
+
     }
 
     private LocalDate readValidCheckInDate(Scanner scanner, LocalDate currentCheckOutDate) {
