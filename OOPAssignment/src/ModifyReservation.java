@@ -1,34 +1,22 @@
 
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class ModifyReservation {
 
-    private Reservation reservation;
+    private ArrayList<Reservation> reservation;
 
-    public ModifyReservation(Reservation reservation) {
-        this.reservation = reservation;
+    private Customer customer;
+
+    public ModifyReservation(Customer customer) {
+        this.customer = customer;
+        this.reservation = customer.getReservation();
     }
-
-    public Reservation getReservation() {
+    public ArrayList<Reservation> getReservations() {
         return reservation;
     }
-
-    public void modifyCheckInDate(LocalDate checkInDate) {
-        reservation.setCheckindate(checkInDate);
-        reservation.calNumDays();
-        reservation.calTotalRoomPrice();
-    }
-
-    public void modifyCheckOutDate(LocalDate checkOutDate) {
-
-        reservation.setCheckoutdate(checkOutDate);
-        reservation.calNumDays();
-        reservation.calTotalRoomPrice();
-    }
-
-
 
     public void makeChanges() {
         Scanner scanner = new Scanner(System.in);
@@ -44,36 +32,34 @@ public class ModifyReservation {
         switch (choice) {
             case 1:
                 System.out.print("Enter the new check-in date (YYYY-MM-DD):");
-                LocalDate newCheckInDate = readValidCheckInDate(scanner, reservation.getCheckoutdate());
-                modifyCheckInDate(newCheckInDate);
+                LocalDate newCheckInDate = readValidCheckInDate(scanner, reservation.get(0).getCheckoutdate());
+                reservation.get(0).setCheckindate(newCheckInDate);
                 System.out.println("          Reservation modified successfully.");
                 break;
             case 2:
                 System.out.print("Enter the new check-out date (YYYY-MM-DD):");
-                LocalDate newCheckOutDate = readValidCheckOutDate(scanner, reservation.getCheckindate());
-                modifyCheckOutDate(newCheckOutDate);
+                LocalDate newCheckOutDate = readValidCheckOutDate(scanner, reservation.get(0).getCheckindate());
+                reservation.get(0).setCheckoutdate(newCheckOutDate);
                 System.out.println("          Reservation modified successfully.");
                 break;
-
             default:
                 System.out.println("Invalid choice. No modifications made.");
                 break;
         }
-
-
     }
+
+
 
     private LocalDate readValidCheckInDate(Scanner scanner, LocalDate currentCheckOutDate) {
         LocalDate date = null;
         boolean validDate = false;
         LocalDate minDate = LocalDate.parse("2023-06-01");
-        LocalDate maxDate = LocalDate.parse("2023-06-07");
 
         while (!validDate) {
             String input = scanner.nextLine();
             try {
                 date = LocalDate.parse(input);
-                if (date.isEqual(reservation.getCheckindate())) {
+                if (date.isEqual(reservation.get(0).getCheckindate())) {
                     System.out.println("The new check-in date cannot be the same as the old check-in date.");
                     System.out.print("Please enter a different date: ");
                     continue;
@@ -95,14 +81,13 @@ public class ModifyReservation {
     private LocalDate readValidCheckOutDate(Scanner scanner, LocalDate currentCheckInDate) {
         LocalDate date = null;
         boolean validDate = false;
-        LocalDate minDate = LocalDate.parse("2023-06-01");
         LocalDate maxDate = LocalDate.parse("2023-06-07");
 
         while (!validDate) {
             String input = scanner.nextLine();
             try {
                 date = LocalDate.parse(input);
-                if (date.isEqual(reservation.getCheckoutdate())) {
+                if (date.isEqual(reservation.get(0).getCheckoutdate())) {
                     System.out.println("The new check-out date cannot be the same as the old check-out date.");
                     System.out.print("Please enter a different date: ");
                     continue;
@@ -120,6 +105,7 @@ public class ModifyReservation {
         }
         return date;
     }
+
 
     private void printModify() {
         System.out.println("****************************************************************************************");

@@ -4,28 +4,20 @@ import java.util.Scanner;
 
 public class CancelReservation {
 
-    private Reservation[] reservations;
+    private ArrayList<Reservation> reservation;
     private int numReservations;
 
-    public CancelReservation(Reservation[] reservations, int numReservations) {
-        this.reservations = reservations;
-        this.numReservations = numReservations;
+    public CancelReservation(ArrayList<Reservation> reservation) {
+        this.reservation = reservation;
+        this.numReservations = numReservations();
     }
 
-    public Reservation[] getReservations() {
-        return reservations;
+    public ArrayList<Reservation> getReservation() {
+        return reservation;
     }
 
-    public void setReservations(Reservation[] reservations) {
-        this.reservations = reservations;
-    }
-
-    public int getNumReservations() {
-        return numReservations;
-    }
-
-    public void setNumReservations(int numReservations) {
-        this.numReservations = numReservations;
+    public void setReservation(ArrayList<Reservation> reservation) {
+        this.reservation = reservation;
     }
 
     public void cancelReservation() {

@@ -82,13 +82,7 @@ public class Reservation {
         this.hotel = hotel;
     }
 
-    public String getHotelName() {
-        return hotelName;
-    }
 
-    public void setHotelName(String hotelName) {
-        this.hotelName = hotelName;
-    }
 
     public Room getRoom() {
         return room;
