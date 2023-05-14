@@ -15,37 +15,6 @@ import Service.*;
 
 public class Main {
 
-    /**
-     * public class UserLogin {
-     * private static User currentLoggedInUser;
-     * <p>
-     * public static User getCurrentLoggedInUser() {
-     * if(currentLoggedInUser == null) {
-     * return new User();
-     * }
-     * return currentLoggedInUser;
-     * }
-     * <p>
-     * public static void setCurrentLoggedInUser(User user) {
-     * currentLoggedInUser = user;
-     * }
-     * <p>
-     * }
-     */
-
-    /*
-     * User user = UserLogin.getCurrentLoggedInUser();
-     * UserService userService = new UserService();
-     * String username = getUsernameInputFromConsoleLine();
-     * String passwordFromUser = getPasswordInputFromConsoleLine();
-     * String passwordFromDb = userService.getPasswordByUsername(username);
-     * if(passwordFromuser.equals(passwordFromDb)) {
-     *   user.setUsername(username);
-     *   user.setPassword(passwordFromDb);
-     *   UserLogin.setCurrentLoggedInUser(user);
-     * }
-     *
-     * */
 
     static FoodMenu fd = new FoodMenu();
     static TopUp wallet = new TopUp();
