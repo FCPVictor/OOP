@@ -76,6 +76,7 @@ public class Main {
                 case 3:
                     while (customer.getBalance() < total) {
                         payment = new Wallet(total); //123
+                        System.out.println("eWallet balance: RM " + customer.getBalance());
                         System.out.println("Uh Oh, Insufficient Balance. Proceeding to TopUp Page...");
                         scanner.nextLine();
                         topupProcess(customer);
