@@ -9,6 +9,8 @@ public class Customer {
     private double balance;
     private ArrayList<Reservation> reservation = new ArrayList<>();
 
+    private Wallet wallet;
+
     public Customer() {
     }
 

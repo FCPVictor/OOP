@@ -22,7 +22,6 @@ public class Main {
     static Loyalty member = new Loyalty();
 
 
-
 //    public double generateRandom() {
 //        return ThreadLocalRandom.current().nextDouble(10, 1000);
 //    } // Temporary for data generate only not used anymore
@@ -50,29 +49,58 @@ public class Main {
     }
 
 
-    public String paymentMethods(double subtotal) {
+    public Payment paymentMethods(Customer customer, double subtotal, double total) {
         Payment payment = null;
         String method;
         Scanner scanner = new Scanner(System.in);
         int paymentMethod;
-
+        System.out.println("total variable:" + total);
         do {
             System.out.println("1. Cash");
             System.out.println("2. Credit Card");
-            System.out.println("3. TNG eWallet");
+            System.out.println("3. eWallet");
             System.out.print("Select the payment method: ");
             paymentMethod = scanner.nextInt();
 
             switch (paymentMethod) {
-                case 1 -> payment = new CashPayment(subtotal);
-                case 2 -> payment = new CreditCardPayment(subtotal);
-                case 3 -> payment = new PayTngEwallet(subtotal);
+                case 1:
+                    payment = new CashPayment(total);
+                    break;
+                case 2:
+                    payment = new CreditCardPayment(total);
+                    break;
+                case 3:
+                   payment = new Wallet(total); //123
+
+                    break;
+                default:
+                    System.out.println("Invalid payment method selected.");
             }
+
+
+
         } while (paymentMethod < 1 || paymentMethod > 3);
 
         payment.processPayment();
+        while (customer.getBalance() < total) {
+            System.out.println("Uh Oh, Insufficient Balance. Proceeding to TopUp Page...");
+            scanner.nextLine();
+            topupProcess(customer);
+            total = subtotal * member.getDiscount();
+            System.out.printf("Initial amount to pay: RM %.2f\n", subtotal);
 
-        return payment.getPaymentType();
+            if (member.getDiscount() > 0) {
+                System.out.printf("Member discount: RM %.2f\n", subtotal * member.getDiscount());
+            }
+
+             total = subtotal * (1 - member.getDiscount());
+
+            System.out.printf("Amount to pay: RM %.2f\n", total);
+        }
+
+        payment.setAmount(total);
+
+        return payment;
     }
 
 
@@ -465,7 +493,7 @@ public class Main {
                     break;
             }
 
-        } while (choice != 6);
+        } while (choice != 5);
 
 
     }
@@ -669,6 +697,7 @@ public class Main {
         double userPay = 0.0;
         double balance = 0.0;
         double discount = member.getDiscount();
+        Wallet eWallet = new Wallet(customer.getBalance());
         Main m = new Main();
 
         int lastIndex = customer.getReservation().size() - 1;
@@ -678,17 +707,23 @@ public class Main {
         subtotal = (fd.getServiceSubtotal() + customer.getReservation().get(lastIndex).calTotalRoomPrice());
         System.out.printf("Initial amount to pay: RM %.2f\n", subtotal);
 
-        if (customer.getBalance() > 0){
-            discountAmount = subtotal * member.getDiscount();
-            subtotal -= discountAmount;
-            System.out.printf("Member discount: RM %.2f\n", discountAmount);
+        if (member.getDiscount() > 0) {
+            System.out.printf("Member discount: RM %.2f\n", subtotal * member.getDiscount());
         }
-        System.out.printf("Amount to pay: RM %.2f\n", subtotal);
-        String method = m.paymentMethods(subtotal);
 
-        System.out.printf("Thank you for visiting! \nPayment method: " + method + "\nPlease pay:RM %.2f\n", subtotal);
+        double total = subtotal * (1 - member.getDiscount());
 
-        balance = m.getPayment(subtotal);
+        System.out.printf("Amount to pay: RM %.2f\n", total);
+
+
+        Payment payment = m.paymentMethods(customer, subtotal, total);
+        String paymentMethod = payment.getPaymentType();
+        double actualAmountToPay = payment.getAmount();
+
+
+        System.out.printf("Thank you for visiting! \n" + payment + "\nPlease pay: RM" + actualAmountToPay+ "\n");
+
+        balance = m.getPayment(actualAmountToPay);
 
         System.out.println("\n         *****************************");
         System.out.println("         |   Thank You For Booking   |");
@@ -1527,7 +1562,7 @@ public class Main {
         System.out.printf("%70s","            PLEASE SELECT THE MENU CATEGORY          \n");
     }
 
-    public static void topupProcess(Customer customer) {
+    public static void topupProcess(Customer customer) { // use this for topUp
         boolean validtopup = true;
         Scanner input = new Scanner(System.in);
 
@@ -1587,7 +1622,6 @@ public class Main {
             }
 
         } while (validtopup == false);
-
     }
 
     public static void inputCustDetail(Customer customer, Scanner input){

@@ -9,7 +9,7 @@ public class Loyalty {
     private final double DIAMOND_DISCOUNT = 0.05;
 
     public Loyalty(){
-
+        this.tier = "non";
     }
 
     public Loyalty(String tier, double points){

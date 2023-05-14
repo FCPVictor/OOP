@@ -94,32 +94,18 @@ class CreditCardPayment extends Payment{
     }
 }
 
-class PayTngEwallet extends Payment{
+ class Wallet extends Payment{
+     public Wallet() {
+     }
 
-    private String phoneNum;
-    private String accPassword;
+     public Wallet(double amount) {
+         this.paymentType = "Wallet";
+         this.amount = amount;
+     }
 
-    public PayTngEwallet(double amount) {
-        this.paymentType = "TNG eWallet";
-        this.amount = amount;
-    }
-
-    // Implementation of the processPayment() method for PayPal payments
-    @Override
+     @Override
     public void processPayment() {
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("Enter phone number: ");
-        phoneNum = scanner.next();
-        System.out.print("Enter account password: ");
-        accPassword = scanner.next();
-        System.out.println("Processing eWallet payment of RM %.2f" + amount);
-        System.out.println("Phone Number: " + phoneNum);
-        System.out.println("Password: " + accPassword);
-    }
-
-    @Override
-    public String toString() {
-        return super.toString() + "\nUsername: " + phoneNum + "\nPassword: " + accPassword + "\n";
+         System.out.println("Processing eWallet RM" + amount + "...");
     }
 }
 
