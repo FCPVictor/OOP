@@ -36,7 +36,7 @@ public class Main {
             if (balance < 0) {
                 System.out.println("Insufficient payment! Please pay the correct value!");
             } else {
-                System.out.print("Please Enter Your Payment: ");
+                System.out.print("Please Enter Your Payment: RM ");
             }
             userPayment = scanner.nextDouble();
             balance = userPayment - subtotal;
