@@ -29,7 +29,7 @@ abstract class Payment {
     // toString method to display payment information
     @Override
     public String toString() {
-        return "Payment Type: " + paymentType + "\nAmount: $" + amount;
+        return "Payment Type: " + paymentType + "\nAmount: RM " + amount;
     }
 
 }
@@ -42,7 +42,7 @@ class CashPayment extends Payment{
     }
 
     public void processPayment(){
-        System.out.println("Processing cash payment of RM" + amount);
+        System.out.println("Processing cash payment of RM " + amount);
     }
 
     @Override
@@ -58,6 +58,30 @@ class CreditCardPayment extends Payment{
     private String cardNumber;
     private String expirationDate;
     private String securityCode;
+
+    public String getCardNumber() {
+        return cardNumber;
+    }
+
+    public void setCardNumber(String cardNumber) {
+        this.cardNumber = cardNumber;
+    }
+
+    public String getExpirationDate() {
+        return expirationDate;
+    }
+
+    public void setExpirationDate(String expirationDate) {
+        this.expirationDate = expirationDate;
+    }
+
+    public String getSecurityCode() {
+        return securityCode;
+    }
+
+    public void setSecurityCode(String securityCode) {
+        this.securityCode = securityCode;
+    }
 
     public CreditCardPayment(double amount) {
         this.paymentType = "Credit Card";
@@ -81,7 +105,7 @@ class CreditCardPayment extends Payment{
         expirationDate = scanner.next();
         System.out.print("Enter the security code: ");
         securityCode = scanner.next();
-        System.out.println("Processing credit card payment of RM" + amount);
+        System.out.println("Processing credit card payment of RM " + amount);
         System.out.println("Card number: "+ cardNumber);
         System.out.println("Security code: "+ securityCode);
     }
@@ -105,7 +129,7 @@ class CreditCardPayment extends Payment{
 
      @Override
     public void processPayment() {
-         System.out.println("Processing eWallet RM" + amount + "...");
+         System.out.println("Processing eWallet RM " + amount + "...");
     }
 }
 

@@ -54,7 +54,6 @@ public class Main {
         String method;
         Scanner scanner = new Scanner(System.in);
         int paymentMethod;
-        System.out.println("total variable:" + total);
         do {
             System.out.println("1. Cash");
             System.out.println("2. Credit Card");
@@ -75,7 +74,12 @@ public class Main {
                     payment = new CreditCardPayment(total);
                     break;
                 case 3:
-                   payment = new Wallet(total); //123
+                    while (customer.getBalance() < total) {
+                        payment = new Wallet(total); //123
+                        System.out.println("Uh Oh, Insufficient Balance. Proceeding to TopUp Page...");
+                        scanner.nextLine();
+                        topupProcess(customer);
+                    }
 
                     break;
                 default:
@@ -86,11 +90,7 @@ public class Main {
 
         } while (paymentMethod < 1 || paymentMethod > 3);
 
-        payment.processPayment();
-        while (customer.getBalance() < total) {
-            System.out.println("Uh Oh, Insufficient Balance. Proceeding to TopUp Page...");
-            scanner.nextLine();
-            topupProcess(customer);
+        payment.processPayment(); //111
             total = subtotal * member.getDiscount();
             System.out.printf("Initial amount to pay: RM %.2f\n", subtotal);
 
@@ -101,11 +101,13 @@ public class Main {
              total = subtotal * (1 - member.getDiscount());
 
             System.out.printf("Amount to pay: RM %.2f\n", total);
-        }
+
+
 
         payment.setAmount(total);
 
         return payment;
+
     }
 
 
@@ -728,7 +730,7 @@ public class Main {
         double actualAmountToPay = payment.getAmount();
 
 
-        System.out.printf("Thank you for visiting! \n" + payment + "\nPlease pay: RM" + actualAmountToPay+ "\n");
+        System.out.printf("Thank you for visiting! \n" + payment + "\nPlease pay: RM %.2f\n" , actualAmountToPay);
 
         balance = m.getPayment(actualAmountToPay);
 
@@ -1563,7 +1565,7 @@ public class Main {
                 """);
         System.out.printf("%78s","=====================================================\n");
         System.out.printf("%79s","                  1.Transport Menu                   \n");
-        System.out.printf("%79s","                  2.Foods Menu                       \n");
+        System.out.printf("%79s","                  2.Food Menu                        \n");
         System.out.printf("%79s","                  3.Beverage Menu                    \n");
         System.out.printf("%79s","                  4.Exit                             \n");
         System.out.printf("%78s","=====================================================\n");
