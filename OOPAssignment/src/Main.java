@@ -62,6 +62,11 @@ public class Main {
             System.out.print("Select the payment method: ");
             paymentMethod = scanner.nextInt();
 
+            while (paymentMethod < 1 || paymentMethod > 3) {
+                System.out.println("Invalid input! Please enter 1, 2, or 3 only.");
+                System.out.print("Select the payment method: ");
+                paymentMethod = scanner.nextInt();
+            }
             switch (paymentMethod) {
                 case 1:
                     payment = new CashPayment(total);

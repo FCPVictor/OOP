@@ -2,7 +2,7 @@ package Service;
 
 import java.util.ArrayList;
 
-public class FoodMenu extends ServiceMenu {
+public class FoodMenu extends Menu {
     private int quantity;
     private double serviceSubtotal;
     public FoodMenu(){
