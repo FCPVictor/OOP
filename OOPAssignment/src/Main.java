@@ -699,9 +699,12 @@ public class Main {
         double discountAmount = 0;
         subtotal = (fd.getServiceSubtotal() + customer.getReservation().get(lastIndex).calTotalRoomPrice());
         System.out.printf("Initial amount to pay: RM %.2f\n", subtotal);
-        discountAmount = subtotal * member.getDiscount();
-        subtotal -= discountAmount;
-        System.out.printf("Member discount: RM %.2f\n", discountAmount);
+
+        if (customer.getBalance() > 0){
+            discountAmount = subtotal * member.getDiscount();
+            subtotal -= discountAmount;
+            System.out.printf("Member discount: RM %.2f\n", discountAmount);
+        }
         System.out.printf("Amount to pay: RM %.2f\n", subtotal);
         String method = m.paymentMethods(subtotal);
 
