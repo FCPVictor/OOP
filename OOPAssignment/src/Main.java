@@ -8,6 +8,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.util.concurrent.ThreadLocalRandom;
 
+import Loyalty.Loyalty;
 import Service.*;
 
 
@@ -47,6 +48,8 @@ public class Main {
      * */
 
     static FoodMenu fd = new FoodMenu();
+    static TopUp wallet = new TopUp();
+    static Loyalty member = new Loyalty();
 
 
 
@@ -108,6 +111,8 @@ public class Main {
         User user = null;
         DA da = new DA();
         Print print = new Print();
+
+
 
         Scanner scanner = new Scanner(System.in);
 
@@ -473,6 +478,29 @@ public class Main {
                     //Choice
                 case 3:
                     topupProcess(customer);
+                    if (wallet.getToupAmount() >= 2000){
+                        member.setTier("Diamond");
+                        member.setPoints(wallet.getToupAmount());
+                        System.out.println("Congratulation! You achieve " + member.getTier() + "tier now.");
+                        System.out.println("You can now enjoy " + member.getDiscount() + "% discount for you payment.");
+                    } else if (wallet.getToupAmount() >= 1500) {
+                        member.setTier("Gold");
+                        member.setPoints(wallet.getToupAmount());
+                        System.out.println("Congratulation! You achieve " + member.getTier() + "tier now.");
+                        System.out.println("You can now enjoy " + member.getDiscount() + "% discount for you payment.");
+                    }else if(wallet.getToupAmount() >= 1000){
+                        member.setTier("Silver");
+                        member.setPoints(wallet.getToupAmount());
+                        System.out.println("Congratulation! You achieve " + member.getTier() + "tier now.");
+                        System.out.println("You can now enjoy " + member.getDiscount() + "% discount for you payment.");
+                    }else if(wallet.getToupAmount() >= 500){
+                        member.setTier("Bronze");
+                        member.setPoints(wallet.getToupAmount());
+                        System.out.println("Congratulation! You achieve " + member.getTier() + "tier now.");
+                        System.out.println("You can now enjoy " + member.getDiscount() + "% discount for you payment.");
+                    }else {
+                        member.setTier("Non");
+                    }
                     break;
 
                 case 4:
@@ -485,12 +513,18 @@ public class Main {
                     double subtotal = 0.0;
                     double userPay = 0.0;
                     double balance = 0.0;
+                    double discount = member.getDiscount();
                     Main m = new Main();
 
                     int lastIndex = customer.getReservation().size() - 1;
 
                     print.printPaymentArt();
+                    double discountAmount = 0;
                     subtotal = (fd.getServiceSubtotal() + customer.getReservation().get(lastIndex).calTotalRoomPrice());
+                    System.out.printf("Initial amount to pay: RM %.2f\n", subtotal);
+                    discountAmount = subtotal * member.getDiscount();
+                    subtotal -= discountAmount;
+                    System.out.printf("Member discount: RM %.2f\n", discountAmount);
                     System.out.printf("Amount to pay: RM %.2f\n", subtotal);
                     String method = m.paymentMethods(subtotal);
 
@@ -1545,12 +1579,11 @@ public class Main {
     }
 
     public static void topupProcess(Customer customer) {
-        TopUp topUp = new TopUp();
         boolean validtopup = true;
         Scanner input = new Scanner(System.in);
 
         //Display user details and account balance
-        topUp.topupHeader();
+        wallet.topupHeader();
 
         //Input top up amount
 
@@ -1564,7 +1597,7 @@ public class Main {
                 if (topupAmount <= 0) {
                     throw new IllegalArgumentException("Please Enter a Valid Amount");
                 } else {
-                    topUp.addFunds(customer, topupAmount);
+                    wallet.addFunds(customer, topupAmount);
                     System.out.println("\n-------Top Up Successful-------");
 
                     System.out.println("==============================");

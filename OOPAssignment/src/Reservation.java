@@ -120,7 +120,7 @@ public class Reservation {
                 "Days of Stay   : " + calNumDays() + "\n" +
                 "Room Price     : RM" + room.getPrice() +"\n" +
                 "---------------------------------------------\n" +
-                "Total Price    : RM" + calTotalRoomPrice() + "\n" +
+                "Total Room Fee : RM" + calTotalRoomPrice() + "\n" +
                 "---------------------------------------------\n";
     }
 
