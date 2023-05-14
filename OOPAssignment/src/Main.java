@@ -18,6 +18,7 @@ public class Main {
 
     static FoodMenu fd = new FoodMenu();
     static TopUp wallet = new TopUp();
+    Print print = new Print();
     static Loyalty member = new Loyalty();
 
 
@@ -79,16 +80,16 @@ public class Main {
         Customer customer = new Customer();
         User user = null;
         DA da = new DA();
-        Print print = new Print();
+        Main m = new Main();
 
 
 
         Scanner scanner = new Scanner(System.in);
 
         //Prompt welcome msg
-        print.welcomeScreen();
+        m.print.welcomeScreen();
         do {
-            print.displayMenu();
+            m.print.displayMenu();
             int userOption = scanner.nextInt();
 
             while (userOption < 0 || userOption > 2) {
@@ -100,7 +101,7 @@ public class Main {
             }
             if (userOption == 2) {
                 Scanner scanner1 = new Scanner(System.in);
-                print.printArtWork(2);
+                m.print.printArtWork(2);
                 // Prompt the user to enter their username and password
                 System.out.print("Enter your username: ");
                 String username = scanner1.nextLine();
@@ -114,7 +115,7 @@ public class Main {
 
             } else if (userOption == 1) {
                 Scanner scanner2 = new Scanner(System.in);
-                print.printArtWork(1);
+                m.print.printArtWork(1);
                 try {
                     System.out.print("Enter your username to login: ");
                     String username = scanner2.nextLine();
@@ -477,32 +478,6 @@ public class Main {
                     break;
 
                 case 5:
-                    //Payment part
-                    Scanner scanner1 = new Scanner(System.in);
-                    double subtotal = 0.0;
-                    double userPay = 0.0;
-                    double balance = 0.0;
-                    double discount = member.getDiscount();
-                    Main m = new Main();
-
-                    int lastIndex = customer.getReservation().size() - 1;
-
-                    print.printPaymentArt();
-                    double discountAmount = 0;
-                    subtotal = (fd.getServiceSubtotal() + customer.getReservation().get(lastIndex).calTotalRoomPrice());
-                    System.out.printf("Initial amount to pay: RM %.2f\n", subtotal);
-                    discountAmount = subtotal * member.getDiscount();
-                    subtotal -= discountAmount;
-                    System.out.printf("Member discount: RM %.2f\n", discountAmount);
-                    System.out.printf("Amount to pay: RM %.2f\n", subtotal);
-                    String method = m.paymentMethods(subtotal);
-
-                    System.out.printf("Thank you for visiting! \nPayment method: " + method + "\nPlease pay:RM %.2f\n", subtotal);
-
-                    balance = m.getPayment(subtotal);
-
-                    break;
-                case 6:
                     //Exit
                     System.out.println("Thank you!!");
                     break;
@@ -709,6 +684,30 @@ public class Main {
         //Display Reservation Summary
         String custResSum = customer.toString();
         System.out.println(custResSum);
+
+        //Payment part
+        Scanner scanner1 = new Scanner(System.in);
+        double subtotal = 0.0;
+        double userPay = 0.0;
+        double balance = 0.0;
+        double discount = member.getDiscount();
+        Main m = new Main();
+
+        int lastIndex = customer.getReservation().size() - 1;
+
+        m.print.printPaymentArt();
+        double discountAmount = 0;
+        subtotal = (fd.getServiceSubtotal() + customer.getReservation().get(lastIndex).calTotalRoomPrice());
+        System.out.printf("Initial amount to pay: RM %.2f\n", subtotal);
+        discountAmount = subtotal * member.getDiscount();
+        subtotal -= discountAmount;
+        System.out.printf("Member discount: RM %.2f\n", discountAmount);
+        System.out.printf("Amount to pay: RM %.2f\n", subtotal);
+        String method = m.paymentMethods(subtotal);
+
+        System.out.printf("Thank you for visiting! \nPayment method: " + method + "\nPlease pay:RM %.2f\n", subtotal);
+
+        balance = m.getPayment(subtotal);
 
         System.out.println("\n         *****************************");
         System.out.println("         |   Thank You For Booking   |");
