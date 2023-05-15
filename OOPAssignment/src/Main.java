@@ -374,7 +374,7 @@ public class Main {
                             customer = MakeReservationProcess(hotels, rooms, customer);
                             break;
                         case 2:
-                            modifyReservation(hotels, rooms, customer, wallet, member);
+                            modifyReservation(hotels, rooms, customer, wallet);
                             break;
 
                         case 3:
@@ -1932,7 +1932,7 @@ public class Main {
 
         return payment;
     }
-    public static void modifyReservation(ArrayList<Hotel> hotels, ArrayList<Room> rooms, Customer customer, TopUp wallet, Loyalty loyalty) {
+    public static void modifyReservation(ArrayList<Hotel> hotels, ArrayList<Room> rooms, Customer customer, TopUp wallet) {
         Scanner input = new Scanner(System.in);
 
         printModify();
@@ -2010,7 +2010,7 @@ public class Main {
 
 
                 if (payment != null) {
-                    double newBalance = customer.getBalance();
+                    double newBalance = customer.getBalance() ;
                     customer.setBalance(newBalance);
                     System.out.println("Payment successful. Balance: " + customer.getBalance());
                 } else {
