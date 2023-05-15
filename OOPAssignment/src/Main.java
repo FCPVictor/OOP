@@ -126,9 +126,8 @@ public class Main {
             System.out.println("\nWelcome to our Hotel Booking System");
             System.out.println("1. Search for Hotels");
             System.out.println("2. Reservation");
-            System.out.println("3. Top Up");
-            System.out.println("4. Profile");
-            System.out.println("5. Exit");
+            System.out.println("3. Profile");
+            System.out.println("4. Exit");
 
             System.out.print("Enter your choice: ");
             choice = scanner.nextInt();
@@ -397,16 +396,11 @@ public class Main {
 
                 //Choice
                 case 3:
-                    topupProcess(customer);
-
-                    break;
-
-                case 4:
                     DisplayProfile(customer);
                     break;
 
-                case 5:
-                    //Exit
+                //Exit
+                case 4:
                     System.out.println("Thank you!!");
                     break;
 
@@ -415,7 +409,7 @@ public class Main {
                     break;
             }
 
-        } while (choice != 5);
+        } while (choice != 4);
 
 
     }
@@ -1649,7 +1643,7 @@ public class Main {
         System.out.println("IC              : " + customer.getCustIc());
         System.out.println("Contact         : " + customer.getContact());
         System.out.println("Email           : " + customer.getEmail());
-        System.out.println("Account Balance : " + String.format("%.2f",customer.getBalance()));
+        System.out.println("Account Balance : RM " + String.format("%.2f",customer.getBalance()));
         System.out.println("=======================================================");
     }
 
