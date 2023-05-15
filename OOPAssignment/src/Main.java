@@ -11,21 +11,12 @@ import Service.*;
 
 
 public class Main {
-
-
     static FoodMenu fd = new FoodMenu();
     static TopUp wallet = new TopUp();
     static Loyalty member = new Loyalty();
 
     static int resId = 1010;
     Print print = new Print();
-
-
-
-
-//    public double generateRandom() {
-//        return ThreadLocalRandom.current().nextDouble(10, 1000);
-//    } // Temporary for data generate only not used anymore
 
     public static void main(String[] args) {
         Customer customer = new Customer();
@@ -1489,20 +1480,6 @@ public class Main {
         System.out.printf("%70s", "            PLEASE SELECT THE MENU CATEGORY          \n");
     }
 
-//    private double calculateNewTotalPayment(){
-//        double originalTotalPayment = customer.getReservation().get(lastIndex).calTotalRoomPrice();
-//        double modifiedTotalPayment = originalTotalPayment;
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//    }
-
     public static void topupProcess(Customer customer) { // use this for topUp
         boolean validtopup = true;
         Scanner input = new Scanner(System.in);
@@ -1672,7 +1649,7 @@ public class Main {
         System.out.println("IC              : " + customer.getCustIc());
         System.out.println("Contact         : " + customer.getContact());
         System.out.println("Email           : " + customer.getEmail());
-        System.out.println("Account Balance : " + customer.getBalance());
+        System.out.println("Account Balance : " + String.format("%.2f",customer.getBalance()));
         System.out.println("=======================================================");
     }
 
@@ -1921,7 +1898,7 @@ public class Main {
                     break;
                 case 3:
                     while (customer.getBalance() < total) {
-                        payment = new Wallet(total); //123
+                        payment = new Wallet(total);
                         System.out.println("Current eWallet balance: RM " + customer.getBalance());
                         System.out.println("Uh Oh, Insufficient Balance. Proceeding to TopUp Page...");
                         System.out.println("Press any key to continue.");
@@ -1929,7 +1906,7 @@ public class Main {
                         topupProcess(customer);
                     }
 
-                    customer.setBalance(customer.getBalance() - payment.getAmount());
+                    customer.setBalance(customer.getBalance() - (payment.getAmount() - payment.getAmount() * member.getDiscount()));
                     break;
                 default:
                     System.out.println("Invalid payment method selected.");
@@ -2026,7 +2003,7 @@ public class Main {
 
             if (originalPrice < modifiedPrice) {
                 double additionalPayment = modifiedPrice - originalPrice;
-                System.out.println("Additional payment of $" + additionalPayment + " is required.");
+                System.out.println("Additional payment of RM " + additionalPayment + " is required.");
 
                 double paymentAmount = additionalPayment * (1 - member.getDiscount());
                 Payment payment = paymentMethods(customer, paymentAmount, additionalPayment);
@@ -2042,9 +2019,9 @@ public class Main {
                 }
             } else if (originalPrice > modifiedPrice) {
                 double refundAmount = originalPrice - modifiedPrice;
-                System.out.println("You are eligible for a refund of $" + refundAmount);
+                System.out.println("You are eligible for a refund of RM " + refundAmount);
                 wallet.addFunds(customer, refundAmount);
-                System.out.println("Balance : " + customer.getBalance());
+                System.out.println("Balance RM : " + customer.getBalance());
             } else {
                 System.out.println("The modified reservation price remains the same.");
             }

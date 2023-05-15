@@ -29,7 +29,7 @@ abstract class Payment {
     // toString method to display payment information
     @Override
     public String toString() {
-        return "Payment Type: " + paymentType + "\nAmount: RM " + amount;
+        return "Payment Type: " + paymentType + "\nAmount: RM " + String.format("%.2f", amount);
     }
 
 }
