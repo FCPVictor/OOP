@@ -384,7 +384,7 @@ public class Main {
                             break;
                         case 2:
 
-//                            ModifyReservation(customer, customer.getReservation(), paymentMethods(customer, subtotal, total))
+                            modifyReservation(hotels, rooms, customer, wallet, member);
 
                             break;
 
@@ -1882,101 +1882,87 @@ public class Main {
 
     }
 
-//    public static void ModifyReservation(Customer customer, Reservation reservation, Payment payment) {
-//        Scanner scanner = new Scanner(System.in);
-//
-//
-//
-//        printModify();
-//        System.out.print("Enter the reservation ID: ");
-//        int reservationID = scanner.nextInt();
-//        scanner.nextLine();
-//
-//        Reservation reservationToModify = null;
-//        for (Reservation res : customer.getReservation()) {
-//            if (res.getResId() == reservationID) {
-//                reservationToModify = res;
-//                break;
-//            }
-//        }
-//
-//        if (reservationToModify == null) {
-//            System.out.println("Invalid reservation ID. Please try again.");
-//            return;
-//        }
-//
-//        System.out.println("Reservation Details:\n" + reservationToModify);
-//
-//        System.out.println("\nSelect an option to modify:");
-//        System.out.println("1. Check-in Date");
-//        System.out.println("2. Check-out Date");
-//        System.out.println("3. Cancel");
-//        System.out.print("Enter your choice: ");
-//        int choice = scanner.nextInt();
-//        scanner.nextLine();
-//
-//        switch (choice) {
-//            case 1:
-//                System.out.print("Enter the new check-in date (YYYY-MM-DD): ");
-//                String checkInDateString = scanner.nextLine();
-//                LocalDate newCheckInDate = LocalDate.parse(checkInDateString);
-//                reservationToModify.setCheckindate(newCheckInDate);
-//                System.out.println("Reservation modified successfully.");
-//                break;
-//            case 2:
-//                System.out.print("Enter the new check-out date (YYYY-MM-DD): ");
-//                String checkOutDateString = scanner.nextLine();
-//                LocalDate checkOutDate = LocalDate.parse(checkOutDateString);
-//                reservationToModify.setCheckoutdate(checkOutDate);
-//                System.out.println("Reservation modified successfully.");
-//                break;
-//            case 3:
-//                System.out.println("Modification canceled.");
-//                return;
-//            default:
-//                System.out.println("Invalid choice. No modifications made.");
-//                return;
-//        }
-//
-//        double modifiedTotalPrice = fd.getServiceSubtotal() + reservationToModify.calTotalRoomPrice();
-//
-//        if (modifiedTotalPrice > reservation.calTotalRoomPrice()) {
-//            double amountToPay = modifiedTotalPrice - reservation.calTotalRoomPrice();
-//            System.out.println("Amount to pay: RM " + amountToPay);
-//
-//            // Code for payment process (e.g., select payment method, make payment, update customer's balance)
-//            Payment payments = paymentMethods(customer, reservation.calTotalRoomPrice(), modifiedTotalPrice);
-//            System.out.print("Enter payment amount: RM ");
-//            double paymentAmount = scanner.nextDouble();
-//            scanner.nextLine();
-//
-//            if (paymentAmount >= amountToPay) {
-//                double change = paymentAmount - amountToPay;
-//                customer.setBalance(customer.getBalance() + change);
-//                System.out.println("Payment successful. Change: RM " + change);
-//            } else {
-//                double remainingAmount = amountToPay - paymentAmount;
-//                customer.setBalance(customer.getBalance() - remainingAmount);
-//                System.out.println("Payment incomplete. Remaining amount: RM " + remainingAmount);
-//            }
-//        } else {
-//            double refundAmount = reservationToModify.calTotalRoomPrice() - modifiedTotalPrice;
-//            System.out.println("Refund amount: RM " + refundAmount);
-//
-//            // Code for refund process (e.g., update customer's balance)
-//            customer.setBalance(customer.getBalance() + refundAmount);
-//            System.out.println("Refund successful. New balance: RM " + customer.getBalance());
-//        }
-//
-//        System.out.println("\nUpdated Reservation Summary:");
-//        System.out.println("=============================");
-//        System.out.println(reservationToModify);
-//        customer.addReservation(reservationToModify);
-//    }
+    public static void modifyReservation(ArrayList<Hotel> hotels, ArrayList<Room> rooms, Customer customer, TopUp wallet, Loyalty loyalty) {
+        Scanner input = new Scanner(System.in);
+
+        printModify();
+
+        // Search for existing reservation
+        Reservation selectedReservation = null;
+        for (Reservation reservation : customer.getReservation()) {
+            System.out.println("Reservation ID: " + reservation.getResId() + " - Hotel: " + reservation.getHotel().getHotelName() + " - Room Type: " + reservation.getRoom().getRoomType());
+        }
+
+        System.out.print("Enter the ID of the reservation you want to modify: ");
+        int reservationId = input.nextInt();
+
+        for (Reservation reservation : customer.getReservation()) {
+            if (reservation.getResId() == reservationId) {
+                selectedReservation = reservation;
+                break;
+            }
+        }
+
+        if (selectedReservation == null) {
+            System.out.println("Reservation not found.");
+            return;
+        }
+
+        // Get new check-in and check-out date
+        System.out.print("Enter new check-in date (yyyy-mm-dd): ");
+        String checkInDateString = input.next();
+
+        System.out.print("Enter new check-out date (yyyy-mm-dd): ");
+        String checkOutDateString = input.next();
+
+        // Calculate payment based on original and modified dates
+        LocalDate originalCheckInDate = selectedReservation.getCheckindate();
+        LocalDate originalCheckOutDate = selectedReservation.getCheckoutdate();
+        LocalDate modifiedCheckInDate = LocalDate.parse(checkInDateString, DateTimeFormatter.ISO_DATE);
+        LocalDate modifiedCheckOutDate = LocalDate.parse(checkOutDateString, DateTimeFormatter.ISO_DATE);
 
 
+        double originalPrice = selectedReservation.calTotalRoomPrice();
+        double modifiedPrice = selectedReservation.calTotalRoomPrice();
 
 
+        // Update reservation object
+        try {
+            if (modifiedCheckOutDate.isBefore(modifiedCheckInDate)) {
+                throw new IllegalArgumentException("Check-out date must be after check-in date.");
+            }
+
+            selectedReservation.setCheckindate(modifiedCheckInDate);
+            selectedReservation.setCheckoutdate(modifiedCheckOutDate);
+
+            System.out.println("\nUpdated Reservation Details:");
+            System.out.println(selectedReservation.toString()); // Call toString() method
+
+            System.out.println("Reservation successfully modified.");
+
+            if (originalPrice < modifiedPrice) {
+                double additionalPayment = modifiedPrice - originalPrice;
+                System.out.println("Additional payment of $" + additionalPayment + " is required.");
+                Payment payment = Main.paymentMethods(customer, additionalPayment, additionalPayment);
+                if (payment == null) {
+                    System.out.println("Payment failed. Reservation not modified.");
+                    return;
+                }
+            } else if (originalPrice > modifiedPrice) {
+                double refundAmount = originalPrice - modifiedPrice;
+                System.out.println("You are eligible for a refund of $" + refundAmount);
+                // Apply refund logic
+                wallet.setToupAmount(wallet.getToupAmount() + refundAmount);
+            } else {
+                System.out.println("The modified reservation price remains the same.");
+
+            }
+        } catch (DateTimeParseException e) {
+            System.out.println("Invalid date format.");
+        } catch (IllegalArgumentException e) {
+            System.out.println(e.getMessage());
+        }
+    }
 
     private static void printModify() {
         System.out.println("****************************************************************************************");
