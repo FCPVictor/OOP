@@ -1743,12 +1743,12 @@ public class Main {
                 double totalPrice = (fd.getServiceSubtotal() + selectedReservation.calTotalRoomPrice());
                 double discount = loyalty.getDiscount();
                 double discountAmount = totalPrice * (1- discount);
-                wallet.setToupAmount(wallet.getToupAmount() + discountAmount);
+                wallet.addFunds(customer, totalPrice);
                 System.out.println("==================================");
                 System.out.println("Reservation canceled successfully.");
                 System.out.println("==================================");
                 System.out.println("Refunded Amount : RM" + discountAmount);
-                System.out.println("Balance: " +customer.getBalance());
+                System.out.println("e-Wallet Balance: " +customer.getBalance());
 
             } else {
                 System.out.println("==================================");
@@ -2040,9 +2040,11 @@ public class Main {
                         payment = new Wallet(total); //123
                         System.out.println("Current eWallet balance: RM " + customer.getBalance());
                         System.out.println("Uh Oh, Insufficient Balance. Proceeding to TopUp Page...");
+                        System.out.println("Press any key to continue.");
                         scanner.nextLine();
                         topupProcess(customer);
                     }
+                    customer.setBalance(customer.getBalance() - payment.getAmount());
                     break;
                 default:
                     System.out.println("Invalid payment method selected.");
