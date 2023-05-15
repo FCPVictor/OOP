@@ -383,20 +383,16 @@ public class Main {
                             customer = MakeReservationProcess(hotels, rooms, customer);
                             break;
                         case 2:
-
                             modifyReservation(hotels, rooms, customer, wallet, member);
-
                             break;
 
                         case 3:
                             CancelReservation(customer, wallet, member);
                             customer.removeReservation(customer.getReservation());
-//                            wallet.addFunds(customer, subtotal);
-
                             break;
 
                         case 4:
-                            checkRoomAvailability(customer, hotels, customer.getReservation());
+                            checkAvailability(customer, hotels, customer.getReservation());
                             break;
 
                         case 5:
@@ -1765,7 +1761,7 @@ public class Main {
         System.out.println("-----------------------------------------------------------------------------------");
     }
 
-    public static void checkRoomAvailability( Customer customer, ArrayList<Hotel> hotels, ArrayList<Reservation> reservations) {
+    public static void checkAvailability( Customer customer, ArrayList<Hotel> hotels, ArrayList<Reservation> reservations) {
 
         Scanner scanner = new Scanner(System.in);
         System.out.println("                                   __      __     _____ _               ____ _____ _      _____ _________     __\n"
