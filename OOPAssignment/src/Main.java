@@ -1932,6 +1932,7 @@ public class Main {
                         scanner.nextLine();
                         topupProcess(customer);
                     }
+
                     customer.setBalance(customer.getBalance() - payment.getAmount());
                     break;
                 default:
@@ -2031,13 +2032,14 @@ public class Main {
                 double additionalPayment = modifiedPrice - originalPrice;
                 System.out.println("Additional payment of $" + additionalPayment + " is required.");
 
-                double paymentAmount = getPayment(additionalPayment);
+                double paymentAmount = additionalPayment * (1 - member.getDiscount());
                 Payment payment = paymentMethods(customer, paymentAmount, additionalPayment);
 
+
                 if (payment != null) {
-                    double newBalance = customer.getBalance() - payment.getAmount();
+                    double newBalance = customer.getBalance();
                     customer.setBalance(newBalance);
-                    System.out.println("Payment successful. Balance: " + newBalance);
+                    System.out.println("Payment successful. Balance: " + customer.getBalance());
                 } else {
                     System.out.println("Payment failed. Reservation not modified.");
                     return;
