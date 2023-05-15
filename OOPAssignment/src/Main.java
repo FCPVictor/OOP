@@ -592,11 +592,6 @@ public class Main {
                                 .findFirst()
                                 .orElse(null);
 
-                        selectedRoomPrice = selectedHotel.getRooms().stream()
-                                .filter(room -> room.getPrice() == rd.getRoomPrice())
-                                .mapToDouble(Room::getPrice) // add this line to get the price value
-                                .findFirst()
-                                .orElse(0.0);
 
                         reservation.setRoom(selectedRoom);
 
@@ -1705,7 +1700,7 @@ public class Main {
             System.out.println("Customer's Bookings:");
             for (int i = 0; i < customerReservations.size(); i++) {
                 Reservation reservation = customerReservations.get(i);
-                System.out.println((i + 1) + ". Reservation ID: " + reservation.getResId());
+                System.out.println((i + 1)+ ". Reservation ID: " + reservation.getResId() + "  Hotel: " + reservation.getHotel().getHotelName() + " - Room Type: " + reservation.getRoom().getRoomType());
             }
 
             System.out.println("0. Exit");
@@ -1882,114 +1877,7 @@ public class Main {
 
     }
 
-    public static void modifyReservation(ArrayList<Hotel> hotels, ArrayList<Room> rooms, Customer customer, TopUp wallet, Loyalty loyalty) {
-        Scanner input = new Scanner(System.in);
-
-        printModify();
-
-        // Search for existing reservation
-        Reservation selectedReservation = null;
-        for (Reservation reservation : customer.getReservation()) {
-            System.out.println("Reservation ID: " + reservation.getResId() + " - Hotel: " + reservation.getHotel().getHotelName() + " - Room Type: " + reservation.getRoom().getRoomType());
-        }
-
-        System.out.print("Enter the ID of the reservation you want to modify: ");
-        int reservationId = input.nextInt();
-
-        for (Reservation reservation : customer.getReservation()) {
-            if (reservation.getResId() == reservationId) {
-                selectedReservation = reservation;
-                break;
-            }
-        }
-
-        if (selectedReservation == null) {
-            System.out.println("Reservation not found.");
-            return;
-        }
-
-        // Get new check-in and check-out date
-        System.out.print("Enter new check-in date (yyyy-mm-dd): ");
-        String checkInDateString = input.next();
-
-        System.out.print("Enter new check-out date (yyyy-mm-dd): ");
-        String checkOutDateString = input.next();
-
-        // Calculate payment based on original and modified dates
-        LocalDate originalCheckInDate = selectedReservation.getCheckindate();
-        LocalDate originalCheckOutDate = selectedReservation.getCheckoutdate();
-        LocalDate modifiedCheckInDate = LocalDate.parse(checkInDateString, DateTimeFormatter.ISO_DATE);
-        LocalDate modifiedCheckOutDate = LocalDate.parse(checkOutDateString, DateTimeFormatter.ISO_DATE);
-
-
-        double originalPrice = selectedReservation.calTotalRoomPrice();
-        double modifiedPrice = selectedReservation.calTotalRoomPrice();
-
-
-        // Update reservation object
-        try {
-            if (modifiedCheckOutDate.isBefore(modifiedCheckInDate)) {
-                throw new IllegalArgumentException("Check-out date must be after check-in date.");
-            }
-
-            selectedReservation.setCheckindate(modifiedCheckInDate);
-            selectedReservation.setCheckoutdate(modifiedCheckOutDate);
-
-            System.out.println("\nUpdated Reservation Details:");
-            System.out.println(selectedReservation.toString()); // Call toString() method
-
-            System.out.println("Reservation successfully modified.");
-
-            if (originalPrice < modifiedPrice) {
-                double additionalPayment = modifiedPrice - originalPrice;
-                System.out.println("Additional payment of $" + additionalPayment + " is required.");
-                Payment payment = Main.paymentMethods(customer, additionalPayment, additionalPayment);
-                if (payment == null) {
-                    System.out.println("Payment failed. Reservation not modified.");
-                    return;
-                }
-            } else if (originalPrice > modifiedPrice) {
-                double refundAmount = originalPrice - modifiedPrice;
-                System.out.println("You are eligible for a refund of $" + refundAmount);
-                // Apply refund logic
-                wallet.setToupAmount(wallet.getToupAmount() + refundAmount);
-            } else {
-                System.out.println("The modified reservation price remains the same.");
-
-            }
-        } catch (DateTimeParseException e) {
-            System.out.println("Invalid date format.");
-        } catch (IllegalArgumentException e) {
-            System.out.println(e.getMessage());
-        }
-    }
-
-    private static void printModify() {
-        System.out.println("****************************************************************************************");
-        System.out.println("*               __  __  ____  _____ _____ ________     __                              *");
-        System.out.println("*              |  \\/  |/ __ \\|  __ \\_   _|  ____\\ \\   / /                              *");
-        System.out.println("*              | \\  / | |  | | |  | || | | |__   \\ \\_/ /                               *");
-        System.out.println("*              | |\\/| | |  | | |  | || | |  __|   \\   /                                *");
-        System.out.println("*              | |  | | |__| | |__| || |_| |       | |                                 *");
-        System.out.println("*  _____  _____|_|__|_|\\____/|_____/_____|_|__  ___|_|_ _____ ____  _   _              *");
-        System.out.println("* |  __ \\|  ____|/ ____|  ____|  __ \\ \\    / /\\|__   __|_   _/ __ \\| \\ | |             *");
-        System.out.println("* | |__) | |__  | (___ | |__  | |__) \\ \\  / /  \\  | |    | || |  | |  \\| |             *");
-        System.out.println("* |  _  /|  __|  \\___ \\|  __| |  _  / \\ \\/ / /\\ \\ | |    | || |  | | . ` |             *");
-        System.out.println("* | | \\ \\| |____ ____) | |____| | \\ \\  \\  / ____ \\| |   _| || |__| | |\\  |             *");
-        System.out.println("* |_|  \\_\\______|_____/|______|_|  \\_\\  \\/_/    \\_\\_|  |_____|\\____/|_| \\_|            *");
-        System.out.println("****************************************************************************************");
-    }
-
-    private static void printError() {
-        System.out.println("                              ________ _______    _______     ___  _______     \n"
-                + "                             |_   __  |_   __ \\  |_   __ \\  .'   `|_   __ \\    \n"
-                + "                               | |_ \\_| | |__) |   | |__) |/  .-.  \\| |__) |   \n"
-                + "                               |  _| _  |  __ /    |  __ / | |   | ||  __ /    \n"
-                + "                              _| |__/ |_| |  \\ \\_ _| |  \\ \\\\  `-'  _| |  \\ \\_  \n"
-                + "                             |________|____| |___|____| |___`.___.|____| |___| \n"
-                + "                                                                               \n");
-    }
-    public double getPayment(double subtotal) {
+    public static double getPayment(double subtotal) {
         Scanner scanner = new Scanner(System.in);
         double userPayment;
         double balance = 0;
@@ -2054,22 +1942,148 @@ public class Main {
         } while (paymentMethod < 1 || paymentMethod > 3);
 
         payment.processPayment();
-            total = subtotal * member.getDiscount();
-            System.out.printf("Initial amount to pay: RM %.2f\n", subtotal);
+        total = subtotal * member.getDiscount();
+        System.out.printf("Initial amount to pay: RM %.2f\n", subtotal);
 
-            if (member.getDiscount() > 0) {
-                System.out.printf("Member discount: RM %.2f\n", subtotal * member.getDiscount());
-            }
+        if (member.getDiscount() > 0) {
+            System.out.printf("Member discount: RM %.2f\n", subtotal * member.getDiscount());
+        }
 
-            total = subtotal * (1 - member.getDiscount());
+        total = subtotal * (1 - member.getDiscount());
 
-            System.out.printf("Amount to pay: RM %.2f\n", total);
+        System.out.printf("Amount to pay: RM %.2f\n", total);
 
 
         payment.setAmount(total);
 
         return payment;
     }
+    public static void modifyReservation(ArrayList<Hotel> hotels, ArrayList<Room> rooms, Customer customer, TopUp wallet, Loyalty loyalty) {
+        Scanner input = new Scanner(System.in);
+
+        printModify();
+
+        // Search for existing reservation
+        Reservation selectedReservation = null;
+        for (Reservation reservation : customer.getReservation()) {
+            System.out.println("Reservation ID: " + reservation.getResId() + " - Hotel: " + reservation.getHotel().getHotelName() + " - Room Type: " + reservation.getRoom().getRoomType());
+        }
+
+        System.out.print("Enter the ID of the reservation you want to modify: ");
+        int reservationId = input.nextInt();
+
+        for (Reservation reservation : customer.getReservation()) {
+            if (reservation.getResId() == reservationId) {
+                selectedReservation = reservation;
+                break;
+            }
+        }
+
+        if (selectedReservation == null) {
+            System.out.println("Reservation not found.");
+            return;
+        }
+
+        // Display original reservation details
+        System.out.println("\nOriginal Reservation Details:");
+        System.out.println(selectedReservation.toString());
+
+        // Get new check-in and check-out date
+        System.out.print("Enter new check-in date (yyyy-mm-dd): ");
+        String checkInDateString = input.next();
+
+        System.out.print("Enter new check-out date (yyyy-mm-dd): ");
+        String checkOutDateString = input.next();
+
+        // Parse input dates
+        LocalDate modifiedCheckInDate;
+        LocalDate modifiedCheckOutDate;
+
+        try {
+            modifiedCheckInDate = LocalDate.parse(checkInDateString, DateTimeFormatter.ISO_DATE);
+            modifiedCheckOutDate = LocalDate.parse(checkOutDateString, DateTimeFormatter.ISO_DATE);
+        } catch (DateTimeParseException e) {
+            System.out.println("Invalid date format.");
+            return;
+        }
+
+        // Validate date range
+        LocalDate validStartDate = LocalDate.parse("2023-06-01");
+        LocalDate validEndDate = LocalDate.parse("2023-06-07");
+
+        if (modifiedCheckInDate.isBefore(validStartDate) || modifiedCheckOutDate.isAfter(validEndDate)) {
+            System.out.println("Date should be between 2023-06-01 and 2023-06-07.");
+            return;
+        }
+
+        // Calculate payment based on original and modified dates
+        double originalPrice = selectedReservation.calTotalRoomPrice();
+        selectedReservation.setCheckindate(modifiedCheckInDate);
+        selectedReservation.setCheckoutdate(modifiedCheckOutDate);
+        double modifiedPrice = selectedReservation.calTotalRoomPrice();
+
+        // Update reservation object
+        try {
+            System.out.println("\nUpdated Reservation Details:");
+            System.out.println(selectedReservation.toString());
+
+            if (originalPrice < modifiedPrice) {
+                double additionalPayment = modifiedPrice - originalPrice;
+                System.out.println("Additional payment of $" + additionalPayment + " is required.");
+
+                double paymentAmount = getPayment(additionalPayment);
+                Payment payment = paymentMethods(customer, paymentAmount, additionalPayment);
+
+                if (payment != null) {
+                    double newBalance = customer.getBalance() - payment.getAmount();
+                    customer.setBalance(newBalance);
+                    System.out.println("Payment successful. Balance: " + newBalance);
+                } else {
+                    System.out.println("Payment failed. Reservation not modified.");
+                    return;
+                }
+            } else if (originalPrice > modifiedPrice) {
+                double refundAmount = originalPrice - modifiedPrice;
+                System.out.println("You are eligible for a refund of $" + refundAmount);
+                wallet.addFunds(customer, refundAmount);
+                System.out.println("Balance : " + customer.getBalance());
+            } else {
+                System.out.println("The modified reservation price remains the same.");
+            }
+
+            System.out.println("Reservation successfully modified.");
+        } catch (IllegalArgumentException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+
+    private static void printModify() {
+        System.out.println("****************************************************************************************");
+        System.out.println("*               __  __  ____  _____ _____ ________     __                              *");
+        System.out.println("*              |  \\/  |/ __ \\|  __ \\_   _|  ____\\ \\   / /                              *");
+        System.out.println("*              | \\  / | |  | | |  | || | | |__   \\ \\_/ /                               *");
+        System.out.println("*              | |\\/| | |  | | |  | || | |  __|   \\   /                                *");
+        System.out.println("*              | |  | | |__| | |__| || |_| |       | |                                 *");
+        System.out.println("*  _____  _____|_|__|_|\\____/|_____/_____|_|__  ___|_|_ _____ ____  _   _              *");
+        System.out.println("* |  __ \\|  ____|/ ____|  ____|  __ \\ \\    / /\\|__   __|_   _/ __ \\| \\ | |             *");
+        System.out.println("* | |__) | |__  | (___ | |__  | |__) \\ \\  / /  \\  | |    | || |  | |  \\| |             *");
+        System.out.println("* |  _  /|  __|  \\___ \\|  __| |  _  / \\ \\/ / /\\ \\ | |    | || |  | | . ` |             *");
+        System.out.println("* | | \\ \\| |____ ____) | |____| | \\ \\  \\  / ____ \\| |   _| || |__| | |\\  |             *");
+        System.out.println("* |_|  \\_\\______|_____/|______|_|  \\_\\  \\/_/    \\_\\_|  |_____|\\____/|_| \\_|            *");
+        System.out.println("****************************************************************************************");
+    }
+
+    private static void printError() {
+        System.out.println("                              ________ _______    _______     ___  _______     \n"
+                + "                             |_   __  |_   __ \\  |_   __ \\  .'   `|_   __ \\    \n"
+                + "                               | |_ \\_| | |__) |   | |__) |/  .-.  \\| |__) |   \n"
+                + "                               |  _| _  |  __ /    |  __ / | |   | ||  __ /    \n"
+                + "                              _| |__/ |_| |  \\ \\_ _| |  \\ \\\\  `-'  _| |  \\ \\_  \n"
+                + "                             |________|____| |___|____| |___`.___.|____| |___| \n"
+                + "                                                                               \n");
+    }
+
 
 }
 
